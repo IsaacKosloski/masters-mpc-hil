@@ -13,6 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # Na R2 entra aqui a compilação do deck e o PDF anexado à release.
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
