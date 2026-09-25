@@ -1,0 +1,349 @@
+% ======================================================================
+% R01 -- Git
+% Molde: por que -> modelo -> nucleo -> exemplo -> armadilhas
+%        -> exercicios -> checklist
+% ======================================================================
+\modulo[R01 Git]{r01}{R01 -- Git}
+
+% ----------------------------------------------------------------------
+\subsection[Por que importa]{Por que isso importa aqui}
+% ----------------------------------------------------------------------
+\begin{frame}{Por que Git nesta disciplina}
+  \begin{itemize}
+    \item Tudo o que produzimos é \alert{texto}: VHDL, Tcl, MATLAB, Python, \LaTeX.
+    \item Precisamos \alert{voltar} ao estado em que o testbench passava,
+      \alert{comparar} versões e \alert{experimentar} sem estragar o que funciona.
+    \item O repositório é o \alert{caderno de laboratório}: cada commit registra
+      o quê, quando e \emph{por quê}.
+    \item A CI verifica cada mudança; as releases entregam o PDF destas notas.
+  \end{itemize}
+  \vfill
+  \begin{block}{Analogia}
+    O Git é um álbum de fotos de uma obra: você arruma o enquadramento
+    (\emph{preparação}), tira a foto (\emph{commit}) e ela nunca mais muda.
+  \end{block}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Modelo mental]{Modelo mental: snapshots e três áreas}
+% ----------------------------------------------------------------------
+\begin{frame}{Snapshots, não diferenças}
+  \centering
+  \begin{tikzpicture}[
+      c/.style={circle, draw=labsemMarinho, fill=labsemGelo,
+        minimum size=9mm, font=\scriptsize},
+      >=Stealth]
+    \node[c] (a) {a1f};
+    \node[c, right=12mm of a] (b) {7c2};
+    \node[c, right=12mm of b] (d) {e90};
+    \draw[<-, thick] (a) -- (b);
+    \draw[<-, thick] (b) -- (d);
+    \node[draw, rounded corners, fill=labsemCobre!20, above=5mm of d,
+      font=\scriptsize] (m) {main};
+    \node[draw, rounded corners, fill=labsemVerde!20, right=4mm of m,
+      font=\scriptsize] (h) {HEAD};
+    \draw[->] (m) -- (d);
+    \draw[->] (h) -- (m);
+  \end{tikzpicture}
+  \vspace{4mm}
+  \begin{itemize}
+    \item Cada \alert{commit} é uma fotografia do projeto inteiro.
+    \item Cada commit aponta para o \alert{pai}: a história é um grafo.
+    \item Identificador = \alert{hash SHA} do conteúdo. Mudou um byte, muda o hash.
+    \item Branch = \alert{etiqueta móvel} que aponta para um commit;
+      \cmd{HEAD} = onde você está.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{As três áreas}
+  \centering
+  \begin{tikzpicture}[
+      area/.style={draw=labsemMarinho, fill=labsemGelo, rounded corners,
+        minimum width=30mm, minimum height=13mm, align=center, font=\small},
+      >=Stealth]
+    \node[area] (wd) {Diretório de\\trabalho};
+    \node[area, right=15mm of wd] (ix) {Preparação\\(\emph{index})};
+    \node[area, right=15mm of ix] (rp) {Repositório\\(\cmd{.git})};
+    \draw[->, thick] (wd) -- node[above, font=\scriptsize] {\cmd{git add}} (ix);
+    \draw[->, thick] (ix) -- node[above, font=\scriptsize] {\cmd{git commit}} (rp);
+    \draw[->, thick, labsemCobre] (rp.south) to[bend left=25]
+      node[below, font=\scriptsize] {\cmd{git restore} / \cmd{git switch}} (wd.south);
+  \end{tikzpicture}
+  \vspace{3mm}
+  \begin{itemize}
+    \item \textbf{Trabalho}: os arquivos no disco, com suas edições.
+    \item \textbf{Preparação}: a \alert{próxima foto} sendo montada;
+      você escolhe o que entra.
+    \item \textbf{Repositório}: fotos já tiradas, imutáveis.
+  \end{itemize}
+  \begin{alertblock}{Consequência}
+    \cmd{git commit} fotografa a \emph{preparação}, não o disco.
+  \end{alertblock}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Ciclo e commits]{Ciclo básico e commits}
+% ----------------------------------------------------------------------
+\begin{frame}[fragile]{O ciclo que se repete sempre}
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      \begin{lstlisting}[style=bash]
+        git status            # onde está cada arquivo
+        git diff              # trabalho -> preparação
+        git add -p arq        # prepara trecho a trecho
+        git diff --staged     # preparação -> commit
+        git commit -m "..."   # tira a foto
+        git lg                # log --oneline --graph
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \begin{block}{Commit atômico}
+        Um commit = um assunto. Corrigiu o testbench e ajustou um
+        comentário no RTL? \alert{Dois commits}.
+      \end{block}
+      \small
+      Por quê: quando algo quebrar, acha-se o commit culpado e ele é
+      desfeito sem levar junto o que estava certo.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Mensagens: Conventional Commits}
+  \begin{lstlisting}[style=bash]
+    tipo(escopo): descrição no imperativo   (<= 72 caracteres)
+
+    corpo opcional: explica o PORQUÊ
+  \end{lstlisting}
+  \small
+  \begin{tabularx}{\textwidth}{@{}lX@{}}
+    \toprule
+    \cmd{feat} / \cmd{fix}               & funcionalidade / correção \\
+    \cmd{docs} / \cmd{test}              & documentação e slides / testbenches \\
+    \cmd{refactor} / \cmd{style}         & reorganização / formatação \\
+    \cmd{build} / \cmd{ci} / \cmd{chore} & toolchain / pipelines / manutenção \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+
+  \textcolor{labsemVerde}{\ding{51}}~\cmd{fix(tcl): compila corpo do pacote após a declaração}\\
+  \textcolor{labsemVermelho}{\ding{55}}~\cmd{ajustes}
+  \vfill
+  \footnotesize
+  Escopos: \cmd{vhdl tcl matlab python slides docs ci repo r01 m2 proj1}.
+  Quebra de compatibilidade: \cmd{feat(tcl)!:}.
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Higiene]{Higiene: ignorar e normalizar}
+% ----------------------------------------------------------------------
+\begin{frame}{\cmd{.gitignore}, \cmd{.gitattributes}, \cmd{.editorconfig}}
+  \begin{tabularx}{\textwidth}{@{}lX@{}}
+    \toprule
+    \cmd{.gitignore}     & o que as ferramentas \alert{geram} fica fora:
+                           \cmd{db/}, \cmd{output\_files/}, \cmd{work/}, \cmd{*.wlf},
+                           \cmd{transcript}, \cmd{*.asv}, \cmd{\_\_pycache\_\_/},
+                           \cmd{*.aux}, \cmd{out/}\ldots \\
+    \cmd{.gitattributes} & finais de linha: \alert{LF} para tudo, CRLF só em
+                           \cmd{.bat/.cmd}; binários marcados;
+                           \cmd{.do/.sdc/.qsf} contados como Tcl \\
+    \cmd{.editorconfig}  & o editor segue as mesmas regras (UTF-8, LF, recuo
+                           por linguagem) \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{3mm}
+  \begin{block}{Regra}
+    O que é \alert{gerado} não se versiona: reconstrói-se com um comando.
+    Git LFS só se um dia for preciso versionar dado bruto grande (ADR).
+  \end{block}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Branches e merge]{Branches e merge}
+% ----------------------------------------------------------------------
+\begin{frame}[fragile]{Branches: trabalhar em paralelo}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[
+          c/.style={circle, draw=labsemMarinho, fill=labsemGelo, minimum size=6mm},
+          f/.style={circle, draw=labsemVerde, fill=labsemVerde!15, minimum size=6mm},
+          >=Stealth]
+        \node[c] (a) {};
+        \node[c, right=6mm of a] (b) {};
+        \node[f, above right=4mm and 6mm of b] (f1) {};
+        \node[f, right=6mm of f1] (f2) {};
+        \node[c, below right=4mm and 22mm of b] (m) {};
+        \draw[<-] (a) -- (b);
+        \draw[<-] (b) -- (f1);
+        \draw[<-] (f1) -- (f2);
+        \draw[<-] (b) -- (m);
+        \draw[<-] (f2) -- (m);
+        \node[font=\scriptsize, right=1mm of m] {merge};
+        \node[font=\scriptsize, above=0mm of f2, text=labsemVerde] {feat/x};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{lstlisting}[style=bash]
+        git switch -c feat/x   # cria e entra
+        # ... commits ...
+        git switch main
+        git merge feat/x
+        git branch -d feat/x
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+    \small
+    \item \alert{Conflito}: os dois lados mudaram as mesmas linhas.
+      Edite o arquivo, apague \cmd{<<<<<<< ======= >>>>>>>},
+      \cmd{git add}, \cmd{git commit}.
+    \item No GitHub usamos \alert{squash merge}: o branch vira um único
+      commit no \cmd{main}.
+  \end{itemize}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Remoto e fluxo]{Remoto e fluxo profissional}
+% ----------------------------------------------------------------------
+\begin{frame}{Remoto e fluxo de trabalho}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \small
+      \begin{tabularx}{\linewidth}{@{}lX@{}}
+        \toprule
+        \cmd{fetch} & baixa, não mexe nos arquivos \\
+        \cmd{pull}  & fetch + avança (\cmd{pull.ff only}) \\
+        \cmd{push}  & envia commits \\
+        \bottomrule
+      \end{tabularx}
+      \vspace{2mm}
+
+      Autenticação por \alert{SSH} (\cmd{gh auth login}).
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \begin{tikzpicture}[
+          s/.style={draw=labsemMarinho, fill=labsemGelo, rounded corners,
+            font=\scriptsize, minimum width=18mm, minimum height=6mm},
+          >=Stealth, node distance=3mm]
+        \node[s] (i) {issue};
+        \node[s, below=of i] (b) {branch};
+        \node[s, below=of b] (p) {PR};
+        \node[s, right=6mm of p] (c) {CI verde};
+        \node[s, above=of c] (sq) {squash merge};
+        \node[s, above=of sq] (t) {tag \(\rightarrow\) release};
+        \draw[->] (i) -- (b);
+        \draw[->] (b) -- (p);
+        \draw[->] (p) -- (c);
+        \draw[->] (c) -- (sq);
+        \draw[->] (sq) -- (t);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+  \small
+  \cmd{main} sempre verde, protegido por \emph{ruleset}. Versões \alert{SemVer}:
+  \cmd{0.MINOR.PATCH} durante o curso; \cmd{1.0.0} = projeto final.
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Hooks e CI/CD]{Automação: hooks e CI/CD}
+% ----------------------------------------------------------------------
+\begin{frame}{Verificação automática em três níveis}
+  \begin{tabularx}{\textwidth}{@{}lXl@{}}
+    \toprule
+    Nível                  & O que verifica                                   & Quando \\
+    \midrule
+    \cmd{pre-commit}       & espaços, fim de arquivo, LF, YAML, arquivos
+                             grandes, chaves privadas, mensagem convencional  & a cada commit \\
+    CI (\cmd{ci.yml})      & os mesmos hooks + (cresce) testes Python,
+                             regressão VHDL, compilação do deck               & a cada PR/push \\
+    CD (\cmd{release.yml}) & release com notas automáticas + PDF das notas    & a cada tag \cmd{v*} \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{3mm}
+  \begin{block}{Por que a CI cresce aos poucos}
+    Cada job entra junto com o conteúdo que ele verifica: você entende cada
+    linha do YAML e o \cmd{main} nunca fica vermelho por padrão.
+  \end{block}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Desfazer]{Desfazer com segurança}
+% ----------------------------------------------------------------------
+\begin{frame}{Desfazer com segurança}
+  \small
+  \begin{tabularx}{\textwidth}{@{}Xll@{}}
+    \toprule
+    Situação                                   & Comando                                     & Destrói? \\
+    \midrule
+    Descartar edição não preparada             & \cmd{git restore arq}                       & a edição \\
+    Tirar da preparação                        & \cmd{git restore --staged arq}              & não \\
+    Corrigir o último commit (não enviado)     & \cmd{git commit --amend}                    & reescreve \\
+    Desfazer N commits locais, mantendo mudanças & \cmd{git reset --soft HEAD\textasciitilde N} & não \\
+    Desfazer commit já enviado                 & \cmd{git revert <hash>}                     & não \\
+    Guardar trabalho pela metade               & \cmd{git stash} / \cmd{pop}                 & não \\
+    ``Perdi um commit''                        & \cmd{git reflog}                            & não \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{alertblock}{Regra}
+    Nunca reescrever (\cmd{amend}, \cmd{reset}, \emph{force push}) o que já
+    está no \cmd{main} remoto.
+  \end{alertblock}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Armadilhas]{Armadilhas}
+% ----------------------------------------------------------------------
+\begin{frame}{Armadilhas}
+  \begin{armadilha}
+    \begin{itemize}
+      \small
+      \item \cmd{git commit -a} pula a preparação: entra tudo o que é
+        rastreado e mudou.
+      \item Caminhos com espaço/acentos quebram Quartus e ModelSim no Windows.
+      \item \cmd{core.autocrlf} ligado + \cmd{.gitattributes}: finais de linha
+        trocados a cada commit. Deixe o \cmd{.gitattributes} mandar.
+      \item Versionar \cmd{work/}, \cmd{db/} ou PDFs: repositório inchado e
+        conflitos inúteis.
+      \item Mensagem padrão do \cmd{git revert} (\cmd{Revert "..."}) é recusada
+        pelo hook: reescreva como \cmd{revert: ...}.
+      \item Ruleset em repositório privado exige GitHub Pro (Student Pack).
+    \end{itemize}
+  \end{armadilha}
+\end{frame}
+
+% ----------------------------------------------------------------------
+\subsection[Exercícios]{Exercícios e checklist}
+% ----------------------------------------------------------------------
+\begin{frame}{Exercícios}
+  \begin{enumerate}
+    \small
+    \item Você editou um arquivo depois do último commit e não rodou
+      \cmd{git add}. O que \cmd{git commit} registra?
+      \irpara{r01-resp1}{Resposta}
+    \item Após \cmd{git add}, você editou o mesmo arquivo de novo. O que aparece
+      em \cmd{git diff}, em \cmd{git diff --staged} e o que entra no commit?
+      \irpara{r01-resp2}{Resposta}
+    \item Provoque um conflito entre dois branches num repositório de rascunho
+      e resolva-o. Mostre o \cmd{git lg}.
+    \item Um commit ruim já está no \cmd{main} remoto. Qual comando usar e por quê?
+      \irpara{r01-resp4}{Resposta}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Checklist}
+  \begin{seisei}
+    \begin{itemize}
+      \small
+      \item explico as três áreas e o que cada comando move entre elas;
+      \item faço commits atômicos com mensagens convencionais;
+      \item crio branch, abro PR, espero a CI e faço squash merge pelo \cmd{gh};
+      \item sei o que o \cmd{.gitignore} e o \cmd{.gitattributes} do repositório fazem;
+      \item resolvo um conflito sem pânico;
+      \item escolho entre \cmd{restore}, \cmd{reset}, \cmd{revert} e \cmd{stash};
+      \item publico uma release por tag.
+    \end{itemize}
+  \end{seisei}
+\end{frame}

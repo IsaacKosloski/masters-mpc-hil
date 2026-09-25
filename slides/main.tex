@@ -1,0 +1,63 @@
+% ======================================================================
+% Mega-apresentacao: MPC com Hardware-in-the-Loop -- notas de aula
+% Compilar (PowerShell, na raiz do repo):  .\tools\slides.ps1
+% ======================================================================
+\documentclass[aspectratio=169, 10pt]{beamer}
+\input{preambulo/preambulo}
+
+\title[MPC com HiL]{Controle Preditivo baseado em Modelos com Hardware-in-the-Loop}
+\subtitle{Notas de aula}
+\author{Isaac Kosloski}
+\institute[LABSEM · UFMS]{%
+  Laboratório de Sistemas Embarcados (LABSEM)\\
+  FAENG · UFMS}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[plain, noframenumbering]
+  \titlepage
+\end{frame}
+\input{menus}
+
+% ======================================================================
+\bloco{Revisões}
+% ======================================================================
+\input{modulos/r01-git}
+\emconstrucao[R02 LaTeX/Beamer]{r02}{R02 -- LaTeX/Beamer}
+\emconstrucao[R03 Álgebra linear]{r03}{R03 -- Álgebra linear}
+\emconstrucao[R04 Laplace e Z]{r04}{R04 -- Laplace e Z}
+\emconstrucao[R05 Espaço de estados]{r05}{R05 -- Espaço de estados}
+\emconstrucao[R06 Controle clássico]{r06}{R06 -- Controle clássico}
+\emconstrucao[R07 Otimização]{r07}{R07 -- Otimização quadrática}
+\emconstrucao[R08 Observadores]{r08}{R08 -- Observadores e Kalman}
+\emconstrucao[R09 MATLAB]{r09}{R09 -- MATLAB}
+\emconstrucao[R10 Simulink]{r10}{R10 -- Simulink}
+\emconstrucao[R11 Python]{r11}{R11 -- Python/NumPy}
+\emconstrucao[R12 VHDL]{r12}{R12 -- VHDL}
+\emconstrucao[R13 Quartus/ModelSim]{r13}{R13 -- Quartus/ModelSim por CLI}
+\emconstrucao[R14 Tcl]{r14}{R14 -- Tcl}
+\emconstrucao[R15 Ponto-fixo]{r15}{R15 -- Ponto-fixo}
+
+% ======================================================================
+\bloco{Disciplina}
+% ======================================================================
+\emconstrucao[M1 Modelagem]{m1}{M1 -- Revisão e modelagem}
+\emconstrucao[M2 Fundamentos]{m2}{M2 -- Fundamentos de MPC}
+\emconstrucao[M3 Restrições]{m3}{M3 -- Restrições e robustez}
+\emconstrucao[M4 Laguerre]{m4}{M4 -- Laguerre}
+\emconstrucao[M5 Simulink]{m5}{M5 -- Simulink e co-simulação}
+\emconstrucao[M6 HiL]{m6}{M6 -- Hardware-in-the-Loop}
+\emconstrucao[Projetos]{projetos}{Projetos}
+
+% ======================================================================
+% Apendice: respostas, derivacoes, codigo longo
+% ======================================================================
+\appendix
+\input{modulos/r01-git-apendice}
+
+\begin{frame}[plain, noframenumbering]
+  \finalpage{Obrigado!}
+\end{frame}
+
+\end{document}

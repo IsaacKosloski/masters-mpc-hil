@@ -1,0 +1,168 @@
+% ======================================================================
+% labsem-marca.sty -- identidade visual primaria do LABSEM (UFMS)
+% Cores, simbolo, assinaturas e grafismo desenhados em TikZ.
+% Licenca: CC BY 4.0 -- ver docs/identidade/README.md
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labsem-marca}[2026/09/26 v0.2 Identidade visual LABSEM]
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+
+% ----------------------------------------------------------------------
+% Paleta
+% ----------------------------------------------------------------------
+% Primaria institucional (Manual de Identidade Visual UFMS)
+\definecolor{labsemAzul}{HTML}{0088B7}        % RGB   0 136 183
+% Primarias do laboratorio
+\definecolor{labsemMarinho}{HTML}{0B2E4A}     % RGB  11  46  74
+\definecolor{labsemCobre}{HTML}{C8702A}       % RGB 200 112  42
+% Variantes para texto pequeno (contraste WCAG AA >= 4,5:1)
+\definecolor{labsemAzulTexto}{HTML}{00729A}   % RGB   0 114 154
+\definecolor{labsemCobreTexto}{HTML}{A35C20}  % RGB 163  92  32
+% Apoio
+\definecolor{labsemVerde}{HTML}{1E7F5C}       % RGB  30 127  92
+\definecolor{labsemVermelho}{HTML}{B3261E}    % RGB 179  38  30
+\definecolor{labsemGrafite}{HTML}{2B333B}     % RGB  43  51  59
+\definecolor{labsemGelo}{HTML}{EAF4F8}        % RGB 234 244 248
+\definecolor{labsemCinza}{HTML}{F3F5F7}       % RGB 243 245 247
+
+% ----------------------------------------------------------------------
+% Variantes de cor: cor | negativo | mono
+% ----------------------------------------------------------------------
+\def\labsem@neg{negativo}
+\def\labsem@mono{mono}
+\newcommand{\labsem@variante}[1]{%
+  \def\labsem@tmp{#1}%
+  \def\labsem@corpo{labsemMarinho}%
+  \def\labsem@pino{labsemCobre}%
+  \def\labsem@trilha{labsemAzul}%
+  \def\labsem@via{white}%
+  \def\labsem@txt{labsemMarinho}%
+  \def\labsem@sub{labsemGrafite}%
+  \ifx\labsem@tmp\labsem@neg
+    \def\labsem@corpo{white}%
+    \def\labsem@pino{white}%
+    \def\labsem@trilha{labsemMarinho}%
+    \def\labsem@via{white}%
+    \def\labsem@txt{white}%
+    \def\labsem@sub{white}%
+  \fi
+  \ifx\labsem@tmp\labsem@mono
+    \def\labsem@corpo{black}%
+    \def\labsem@pino{black}%
+    \def\labsem@trilha{white}%
+    \def\labsem@via{black}%
+    \def\labsem@txt{black}%
+    \def\labsem@sub{black}%
+  \fi}
+
+% ----------------------------------------------------------------------
+% Simbolo: chip visto de cima, trilhas desenham "LS"
+%   \labsemsimbolo[<altura>]{cor|negativo|mono}
+% ----------------------------------------------------------------------
+\newcommand{\labsemsimbolo}[2][1cm]{%
+  \begingroup
+  \labsem@variante{#2}%
+  \pgfmathsetlengthmacro{\labsem@u}{#1/1.3}%
+  \pgfmathsetlengthmacro{\labsem@lw}{0.075*#1/1.3}%
+  \begin{tikzpicture}[x=\labsem@u, y=\labsem@u, line cap=round,
+      line join=round, baseline=(current bounding box.south)]
+    % pinos: 4 por lado
+    \foreach \p in {0.2, 0.4, 0.6, 0.8} {
+      \fill[\labsem@pino] (\p-0.045, -0.15) rectangle (\p+0.045, 0.02);
+      \fill[\labsem@pino] (\p-0.045, 0.98) rectangle (\p+0.045, 1.15);
+      \fill[\labsem@pino] (-0.15, \p-0.045) rectangle (0.02, \p+0.045);
+      \fill[\labsem@pino] (0.98, \p-0.045) rectangle (1.15, \p+0.045);
+    }
+    % corpo e marca do pino 1
+    \fill[\labsem@corpo, rounded corners=0.07*\labsem@u] (0, 0) rectangle (1, 1);
+    \fill[\labsem@pino] (0.12, 0.88) circle (0.035);
+    % trilha L
+    \draw[\labsem@trilha, line width=\labsem@lw]
+      (0.26, 0.74) -- (0.26, 0.27) -- (0.41, 0.27);
+    % trilha S
+    \draw[\labsem@trilha, line width=\labsem@lw]
+      (0.76, 0.74) -- (0.60, 0.74) -- (0.60, 0.505)
+      -- (0.76, 0.505) -- (0.76, 0.27) -- (0.60, 0.27);
+    % vias nas extremidades
+    \foreach \x/\y in {0.26/0.74, 0.41/0.27, 0.76/0.74, 0.60/0.27} {
+      \fill[\labsem@trilha] (\x, \y) circle (0.062);
+      \fill[\labsem@via] (\x, \y) circle (0.028);
+    }
+  \end{tikzpicture}%
+  \endgroup}
+
+% ----------------------------------------------------------------------
+% Fontes do logotipo: Fira Sans ExtraBold (fallback: sem serifa atual)
+% ----------------------------------------------------------------------
+\newcommand{\labsem@fontelogo}{\sffamily\bfseries}
+\newcommand{\labsem@fontesub}{\sffamily}
+\@ifpackageloaded{fontspec}{%
+  \IfFontExistsTF{Fira Sans ExtraBold}{%
+    \newfontfamily\labsem@fira{Fira Sans}[BoldFont={Fira Sans ExtraBold}]%
+    \renewcommand{\labsem@fontelogo}{\labsem@fira\bfseries}%
+    \renewcommand{\labsem@fontesub}{\labsem@fira}%
+  }{}%
+}{}
+
+% ----------------------------------------------------------------------
+% Assinatura horizontal: \labsemassinatura[<altura do simbolo>]{variante}
+% ----------------------------------------------------------------------
+\newcommand{\labsemassinatura}[2][1cm]{%
+  \begingroup
+  \labsem@variante{#2}%
+  \pgfmathsetlengthmacro{\labsem@fa}{0.62*#1}%
+  \pgfmathsetlengthmacro{\labsem@fb}{0.165*#1}%
+  \begin{tikzpicture}[baseline=(s.south)]
+    \node[inner sep=0, anchor=south west] (s) at (0, 0) {\labsemsimbolo[#1]{#2}};
+    \node[inner sep=0, anchor=south west, text=\labsem@txt] (n)
+      at ([xshift=0.28*#1]s.south east)
+      {\fontsize{\labsem@fa}{\labsem@fa}\labsem@fontelogo LABSEM};
+    \node[inner sep=0, anchor=south west, text=\labsem@sub]
+      at ([yshift=0.12*#1]n.north west)
+      {\fontsize{\labsem@fb}{\labsem@fb}\labsem@fontesub Laboratório de Sistemas Embarcados};
+  \end{tikzpicture}%
+  \endgroup}
+
+% ----------------------------------------------------------------------
+% Assinatura vertical: \labsemvertical[<altura do simbolo>]{variante}
+% ----------------------------------------------------------------------
+\newcommand{\labsemvertical}[2][1.4cm]{%
+  \begingroup
+  \labsem@variante{#2}%
+  \pgfmathsetlengthmacro{\labsem@fa}{0.42*#1}%
+  \pgfmathsetlengthmacro{\labsem@fb}{0.12*#1}%
+  \begin{tikzpicture}[baseline=(s.south)]
+    \node[inner sep=0] (s) at (0, 0) {\labsemsimbolo[#1]{#2}};
+    \node[inner sep=0, anchor=north, text=\labsem@txt] (n)
+      at ([yshift=-0.22*#1]s.south)
+      {\fontsize{\labsem@fa}{\labsem@fa}\labsem@fontelogo LABSEM};
+    \node[inner sep=0, anchor=north, text=\labsem@sub]
+      at ([yshift=-0.1*#1]n.south)
+      {\fontsize{\labsem@fb}{\labsem@fb}\labsem@fontesub Laboratório de Sistemas Embarcados};
+  \end{tikzpicture}%
+  \endgroup}
+
+% ----------------------------------------------------------------------
+% Grafismo: trilhas de circuito (deterministico, semente fixa)
+%   \labsemtrilhas{<largura mm>}{<altura mm>}{<cor>}{<opacidade>}
+% ----------------------------------------------------------------------
+\newcommand{\labsemtrilhas}[4]{%
+  \begin{tikzpicture}[x=1mm, y=1mm, line cap=round, line join=round]
+    \pgfmathsetseed{2026}
+    \clip (0, 0) rectangle (#1, #2);
+    \pgfmathtruncatemacro{\labsem@n}{#2/4}
+    \foreach \k in {0, ..., \labsem@n} {
+      \pgfmathsetmacro{\yy}{4*\k + 1}
+      \pgfmathsetmacro{\xa}{-5 + 40*rnd}
+      \pgfmathsetmacro{\xb}{\xa + 15 + 30*rnd}
+      \pgfmathsetmacro{\dy}{(rnd < 0.5 ? 4 : -4)}
+      \pgfmathsetmacro{\xc}{\xb + 4}
+      \pgfmathsetmacro{\xd}{\xc + 20 + 60*rnd}
+      \draw[#3, opacity=#4, line width=0.6pt]
+        (\xa, \yy) -- (\xb, \yy) -- (\xc, \yy+\dy) -- (\xd, \yy+\dy);
+      \fill[#3, opacity=#4] (\xd, \yy+\dy) circle (0.9);
+      \fill[white] (\xd, \yy+\dy) circle (0.4);
+    }
+  \end{tikzpicture}}
+\endinput

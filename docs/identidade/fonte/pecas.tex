@@ -1,0 +1,22 @@
+% ======================================================================
+% Gera UMA peca da identidade LABSEM (PDF recortado, fundo transparente).
+% Uso (via .\tools\identidade.ps1, que gera todas):
+%   lualatex -jobname=<nome> "\def\peca{horizontal}\def\variante{cor}\input{pecas}"
+%   peca:     simbolo | horizontal | vertical
+%   variante: cor | negativo | mono
+% ======================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage{fontspec}
+\usepackage{labsem-marca}
+
+\ifdefined\peca\else\def\peca{horizontal}\fi
+\ifdefined\variante\else\def\variante{cor}\fi
+\def\tmpS{simbolo}
+\def\tmpH{horizontal}
+\def\tmpV{vertical}
+
+\begin{document}
+\ifx\peca\tmpS \labsemsimbolo[4cm]{\variante}\fi
+\ifx\peca\tmpH \labsemassinatura[3cm]{\variante}\fi
+\ifx\peca\tmpV \labsemvertical[4cm]{\variante}\fi
+\end{document}

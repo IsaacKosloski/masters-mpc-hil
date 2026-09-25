@@ -1,0 +1,31 @@
+% ======================================================================
+% R01 -- Apendice: respostas dos exercicios
+% ======================================================================
+\section[Resp. R01]{Respostas -- R01}
+
+\begin{frame}[label=r01-resp1]{R01 -- Resposta 1}
+  Nada muda no commit: \cmd{git commit} fotografa a \alert{preparação}.
+  A edição está só no diretório de trabalho; o Git responde
+  \cmd{no changes added to commit}.
+  \vfill
+  \voltar
+\end{frame}
+
+\begin{frame}[label=r01-resp2]{R01 -- Resposta 2}
+  \begin{itemize}
+    \item \cmd{git diff --staged}: a versão \alert{preparada} (a do \cmd{git add}).
+    \item \cmd{git diff}: só a \alert{segunda} edição (trabalho vs.\ preparação).
+    \item O commit registra a versão preparada; a segunda edição fica de fora
+      até um novo \cmd{git add}.
+  \end{itemize}
+  \vfill
+  \voltar
+\end{frame}
+
+\begin{frame}[label=r01-resp4]{R01 -- Resposta 4}
+  \cmd{git revert <hash>}: cria um commit \alert{inverso} sem reescrever a
+  história compartilhada. \cmd{reset} + \emph{force push} reescreveria o que
+  outros (e a CI) já viram.
+  \vfill
+  \voltar
+\end{frame}
