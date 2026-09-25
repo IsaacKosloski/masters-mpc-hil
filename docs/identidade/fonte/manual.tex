@@ -1,0 +1,193 @@
+% ================================================================
+% Manual de identidade visual primária do LABSEM — v0.1 (proposta)
+% Compilar: .\tools\identidade.ps1  (ou lualatex manual.tex com TEXINPUTS
+%           apontando para slides/tema//)
+% ================================================================
+\documentclass[a4paper,landscape,10pt]{article}
+\usepackage[margin=14mm]{geometry}
+\usepackage[brazilian]{babel}
+\usepackage{fontspec}
+\IfFontExistsTF{Fira Sans}{\setmainfont{Fira Sans}[BoldFont={Fira Sans SemiBold}]}{}
+\IfFontExistsTF{Fira Mono}{\setmonofont{Fira Mono}}{}
+\usepackage{labsem-marca}
+\usepackage{tikz,booktabs,tabularx,multicol}
+\usetikzlibrary{positioning}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\newcommand{\titulo}[1]{{\color{labsemMarinho}\LARGE\bfseries #1}\par
+  {\color{labsemCobre}\rule{24mm}{1.2mm}}\par\vspace{4mm}}
+\newcommand{\amostra}[5]{% nome, cor, hex, rgb, cmyk
+  \begin{tikzpicture}
+    \fill[#2, rounded corners=2pt] (0,0) rectangle (38mm,22mm);
+    \draw[gray!30, rounded corners=2pt] (0,0) rectangle (38mm,22mm);
+    \node[anchor=north west, align=left, font=\footnotesize, text width=38mm, inner sep=0]
+      at (0,-2mm) {\textbf{#1}\\\texttt{\##3}\\RGB #4\\CMYK #5};
+  \end{tikzpicture}}
+
+\begin{document}
+% ---------------------------------------------------------------- 1. capa
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[labsemMarinho] (current page.north west) rectangle ([xshift=0.38\paperwidth]current page.south west);
+  \node[anchor=south west, inner sep=0] at (current page.south west) {\labsemtrilhas{113}{210}{labsemAzul}{0.5}};
+  \fill[labsemCobre] ([xshift=0.38\paperwidth]current page.north west) rectangle ([xshift=0.38\paperwidth+1.5mm]current page.south west);
+  \node at ([xshift=0.19\paperwidth]current page.west) {\labsemvertical[4cm]{negativo}};
+  \node[anchor=west, align=left, text width=0.5\paperwidth] at ([xshift=0.44\paperwidth]current page.west) {%
+    {\color{labsemMarinho}\fontsize{30}{34}\selectfont\bfseries Identidade visual\par}
+    \vspace{3mm}{\color{labsemAzulTexto}\Large Manual primário · v0.1 (proposta)\par}
+    \vspace{8mm}{\color{labsemGrafite}Laboratório de Sistemas Embarcados\\Faculdade de Engenharias · UFMS\par}
+    \vspace{8mm}{\color{labsemGrafite}\small Proposta de marca adicional de unidade. Uso restrito a
+    material de divulgação e didático, sempre acompanhada da marca UFMS, conforme o
+    Manual de Identidade Visual da UFMS. Sujeita à aprovação da coordenação do
+    laboratório e da Agecom/UFMS.\par}};
+\end{tikzpicture}
+\newpage
+
+% ---------------------------------------------------------------- 2. conceito e símbolo
+\titulo{Conceito e símbolo}
+\begin{minipage}[t]{0.46\textwidth}
+O símbolo é um \textbf{circuito integrado visto de cima}: o corpo (marinho) com quatro
+pinos de cobre por lado. Sobre ele, duas \textbf{trilhas de circuito impresso}
+(azul UFMS) desenham as iniciais \textbf{L} e \textbf{S} --- \emph{Laboratório} de
+\emph{Sistemas embarcados} ---, terminando em \textbf{vias}.
+
+\begin{itemize}\setlength\itemsep{1pt}
+  \item \textbf{Chip}: o objeto central de um sistema embarcado.
+  \item \textbf{Cobre}: a matéria-prima da placa; cor de acento da marca.
+  \item \textbf{Azul UFMS}: o vínculo institucional, nas trilhas que levam o sinal.
+  \item \textbf{Geometria ortogonal}: roteamento em 90°, como numa placa real.
+\end{itemize}
+
+Todo o desenho é \textbf{vetorial e gerado por código} (TikZ, \texttt{labsem-marca.sty}):
+é reproduzível, versionado e escala sem perda.
+
+\vspace{4mm}
+{\color{labsemMarinho}\bfseries Área de proteção e redução mínima}\par
+Unidade \textbf{X} = largura do corpo do chip ÷ 4. Nenhum elemento deve invadir uma
+margem de \textbf{1X} em torno da marca.\\
+Redução mínima: símbolo \textbf{8 mm}; assinatura horizontal \textbf{30 mm} de largura;
+em tela, símbolo \textbf{24 px}.
+\end{minipage}\hfill
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+\begin{tikzpicture}
+  \node[inner sep=0] (s) {\labsemsimbolo[6cm]{cor}};
+  % grade de construção
+  \begin{scope}[shift={(s.south west)}, x=6cm/1.3, y=6cm/1.3]
+    \foreach \i in {0,...,13}{
+      \draw[labsemAzul!25, very thin] (\i/10,0) -- (\i/10,1.3);
+      \draw[labsemAzul!25, very thin] (0,\i/10) -- (1.3,\i/10);}
+  \end{scope}
+  \draw[labsemCobre, dashed] ([shift={(-5mm,-5mm)}]s.south west) rectangle ([shift={(5mm,5mm)}]s.north east);
+  \node[font=\scriptsize, text=labsemCobreTexto, anchor=south west] at ([shift={(-5mm,5mm)}]s.north west) {área de proteção = 1X};
+\end{tikzpicture}
+\end{minipage}
+\newpage
+
+% ---------------------------------------------------------------- 3. assinaturas e variantes
+\titulo{Assinaturas e variantes}
+\begin{tabularx}{\textwidth}{@{}XXX@{}}
+  \textbf{Horizontal} (preferencial) & \textbf{Vertical} & \textbf{Símbolo} (espaços reduzidos, ícones) \\[2mm]
+  \labsemassinatura[1.4cm]{cor} & \labsemvertical[1.6cm]{cor} & \labsemsimbolo[1.8cm]{cor}
+\end{tabularx}
+
+\vspace{6mm}
+\begin{tikzpicture}
+  \fill[labsemAzul] (0,0) rectangle (82mm,34mm);
+  \node at (41mm,17mm) {\labsemassinatura[1.2cm]{negativo}};
+  \node[anchor=north west, font=\footnotesize] at (0,-1mm) {Negativo sobre azul UFMS};
+  \fill[labsemMarinho] (88mm,0) rectangle (170mm,34mm);
+  \node at (129mm,17mm) {\labsemassinatura[1.2cm]{negativo}};
+  \node[anchor=north west, font=\footnotesize] at (88mm,-1mm) {Negativo sobre marinho};
+  \draw[gray!40] (176mm,0) rectangle (258mm,34mm);
+  \node at (217mm,17mm) {\labsemassinatura[1.2cm]{mono}};
+  \node[anchor=north west, font=\footnotesize] at (176mm,-1mm) {Monocromática (impressão P\&B, carimbo, gravação)};
+\end{tikzpicture}
+
+\vspace{8mm}
+{\color{labsemMarinho}\bfseries Usos indevidos}\par\vspace{2mm}
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \node (a) at (0,0) {\scalebox{1.6}[0.8]{\labsemsimbolo[1.2cm]{cor}}};
+  \node (b) at (45,0) {\rotatebox{20}{\labsemsimbolo[1.2cm]{cor}}};
+  \node (c) at (85,0) {\colorlet{labsemMarinho}{labsemVermelho}\labsemsimbolo[1.2cm]{cor}};
+  \node (d) at (125,0) {\labsemsimbolo[1.2cm]{negativo}};
+  \node (e) at (170,0) {\colorbox{labsemCobre}{\labsemsimbolo[1.2cm]{cor}}};
+  \node (f) at (220,0) {\labsemsimbolo[1.2cm]{cor}\,\raisebox{3mm}{\sffamily\itshape Labsem}};
+  \foreach \peca/\rotulo in {a/Distorcer, b/Girar, c/Trocar cores, d/Negativo em fundo claro, e/Fundo sem contraste, f/Trocar a fonte}{
+    \draw[labsemVermelho, line width=1.2pt] ([shift={(-2,-2)}]\peca.south west) -- ([shift={(2,2)}]\peca.north east);
+    \node[font=\scriptsize, below=3mm of \peca] {\rotulo};}
+\end{tikzpicture}
+\newpage
+
+% ---------------------------------------------------------------- 4. cores
+\titulo{Paleta}
+\textbf{Primárias}\par
+\amostra{Azul UFMS}{labsemAzul}{0088B7}{0 136 183}{100 0 0 30\textsuperscript{*}}\hspace{4mm}
+\amostra{Marinho}{labsemMarinho}{0B2E4A}{11 46 74}{85 38 0 71}\hspace{4mm}
+\amostra{Cobre}{labsemCobre}{C8702A}{200 112 42}{0 44 79 22}
+
+\vspace{7mm}
+\textbf{Apoio}\par
+\amostra{Verde (ok, exemplo)}{labsemVerde}{1E7F5C}{30 127 92}{76 0 28 50}\hspace{4mm}
+\amostra{Vermelho (alerta)}{labsemVermelho}{B3261E}{179 38 30}{0 79 83 30}\hspace{4mm}
+\amostra{Grafite (texto)}{labsemGrafite}{2B333B}{43 51 59}{27 14 0 77}\hspace{4mm}
+\amostra{Gelo (fundos)}{labsemGelo}{EAF4F8}{234 244 248}{6 2 0 3}\hspace{4mm}
+\amostra{Cinza (caixas)}{labsemCinza}{F3F5F7}{243 245 247}{2 1 0 3}
+
+\vspace{7mm}
+\textbf{Para texto pequeno} (contraste WCAG AA $\geq 4{,}5:1$ sobre branco)\par
+\amostra{Azul texto}{labsemAzulTexto}{00729A}{0 114 154}{100 26 0 40}\hspace{4mm}
+\amostra{Cobre texto}{labsemCobreTexto}{A35C20}{163 92 32}{0 44 80 36}
+
+\vspace{4mm}
+\footnotesize\textsuperscript{*}Azul institucional conforme o Manual de Identidade Visual da UFMS
+(Pantone indicado no manual). Demais CMYK são conversões aproximadas --- para impressão
+profissional, confirmar com a gráfica. Azul UFMS e cobre puros sobre branco têm contraste
+$\approx 4{,}0$ e $3{,}6$: use-os em áreas, grafismos e títulos grandes; para texto pequeno, as variantes
+\emph{texto}.
+\newpage
+
+% ---------------------------------------------------------------- 5. tipografia, grafismo, convivência
+\titulo{Tipografia, grafismo e convivência com a marca UFMS}
+\begin{minipage}[t]{0.47\textwidth}
+{\color{labsemMarinho}\bfseries Tipografia}\par
+\textbf{Fira Sans} (SIL Open Font License, livre): ExtraBold no logotipo; Regular/SemiBold
+nos textos. \texttt{Fira Mono} para código. Na falta dela, qualquer sem-serifa humanista
+(ex.: a própria fonte padrão do sistema) --- nunca no logotipo.
+
+\vspace{2mm}
+{\fontsize{26}{28}\selectfont\color{labsemMarinho}\bfseries LABSEM}\quad
+{\Large Aa Bb Cc 0123}\quad{\ttfamily\large q <= d;}
+
+\vspace{6mm}
+{\color{labsemMarinho}\bfseries Grafismo: trilhas}\par
+Linhas ortogonais com dobras a 45° e vias, gerados por código (\texttt{\textbackslash labsemtrilhas}).
+Usados em capas, divisórias e encerramentos, com baixa opacidade, nunca atrás de texto corrido.\par
+\labsemtrilhas{120}{28}{labsemAzul}{0.6}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.47\textwidth}
+{\color{labsemMarinho}\bfseries Convivência com a marca UFMS}\par
+Regras do Manual de Identidade Visual da UFMS para \emph{marcas adicionais} de unidades:
+\begin{itemize}\setlength\itemsep{1pt}
+  \item usar \textbf{sempre junto} da marca UFMS, respeitando a área de proteção dela;
+  \item horizontalmente, a marca UFMS fica \textbf{à direita} das demais (verticalmente, abaixo);
+  \item uso restrito a \textbf{divulgação e material didático} --- não em documentos oficiais;
+  \item \textbf{nenhum elemento} da marca UFMS compõe a marca LABSEM;
+  \item a criação de marca de unidade é \textbf{solicitada à Agecom via SEI}.
+\end{itemize}
+Em slides: marca UFMS no \textbf{canto inferior direito} dos slides de conteúdo; slide final
+com fundo azul UFMS e marcas em negativo. Os arquivos oficiais da marca UFMS são obtidos no
+site da UFMS e não são redesenhados.
+
+\vspace{3mm}
+\begin{tikzpicture}
+  \draw[gray!40] (0,0) rectangle (110mm,22mm);
+  \node[anchor=west] at (4mm,11mm) {\labsemassinatura[1cm]{cor}};
+  \draw[gray!60] (70mm,4mm) -- (70mm,18mm);
+  \node[draw=gray!60, dashed, minimum width=30mm, minimum height=14mm, font=\scriptsize, align=center]
+    at (90mm,11mm) {marca UFMS\\(arquivo oficial)};
+\end{tikzpicture}
+\end{minipage}
+\end{document}
