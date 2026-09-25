@@ -1,0 +1,61 @@
+% ======================================================================
+% beamercolorthemeLABSEM.sty -- cores
+% ----------------------------------------------------------------------
+% Derivado do "Aalborg Beamer Theme" / "AAU Sidebar Beamer Theme"
+% Copyright (c) 2011-2014 Jesper Kjaer Nielsen <jkn@es.aau.dk>
+% Modificacoes (c) 2026 Isaac Kosloski: identidade LABSEM/UFMS, 16:9,
+% LuaLaTeX, cabecalho compacto, barra lateral expansivel.
+% Sem logotipos nem imagens da AAU.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version. It is distributed WITHOUT ANY
+% WARRANTY. See <https://www.gnu.org/licenses/>.
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthemeLABSEM}[2026/09/26 v0.2 Cores LABSEM]
+\RequirePackage{labsem-marca}
+
+\mode<presentation>
+{
+  % Texto e estrutura
+  \setbeamercolor{structure}{fg=labsemMarinho}
+  \setbeamercolor{normal text}{fg=labsemGrafite, bg=white}
+  \setbeamercolor{alerted text}{fg=labsemCobreTexto}
+  \setbeamercolor{example text}{fg=labsemVerde}
+
+  % Barra vertical (fg) e caminho ate o item atual (bg)
+  \setbeamercolor{LABSEM}{fg=labsemAzul, bg=labsemMarinho}
+
+  % Barra lateral
+  \setbeamercolor{palette sidebar primary}{fg=labsemMarinho, bg=labsemGelo}
+  \setbeamercolor{sidebar}{bg=labsemGelo}
+  \setbeamercolor{title in sidebar}{fg=labsemGrafite}
+  \setbeamercolor{part in sidebar}{fg=labsemCobreTexto}
+  \setbeamercolor{author in sidebar}{fg=labsemGrafite}
+  \setbeamercolor{section in sidebar}{fg=labsemMarinho}
+  \setbeamercolor{section in sidebar shaded}{fg=labsemGrafite!75}
+  \setbeamercolor{subsection in sidebar}{fg=labsemAzulTexto}
+  \setbeamercolor{subsection in sidebar shaded}{fg=labsemGrafite!75}
+
+  % Titulos
+  \setbeamercolor{frametitle}{fg=labsemMarinho}
+  \setbeamercolor{framesubtitle}{fg=labsemAzulTexto}
+  \setbeamercolor{title}{fg=labsemMarinho}
+  \setbeamercolor{subtitle}{fg=labsemAzulTexto}
+  \setbeamercolor{titlepagecolorbox}{fg=white, bg=labsemMarinho}
+
+  % Itens e botoes
+  \setbeamercolor{item}{fg=labsemAzul}
+  \setbeamercolor{button}{fg=white, bg=labsemMarinho}
+
+  % Blocos
+  \setbeamercolor{block title}{fg=white, bg=labsemAzulTexto}
+  \setbeamercolor{block body}{fg=labsemGrafite, bg=labsemCinza}
+  \setbeamercolor{block title alerted}{fg=white, bg=labsemVermelho}
+  \setbeamercolor{block body alerted}{fg=labsemGrafite, bg=labsemCinza}
+  \setbeamercolor{block title example}{fg=white, bg=labsemVerde}
+  \setbeamercolor{block body example}{fg=labsemGrafite, bg=labsemCinza}
+}
+\mode<all>

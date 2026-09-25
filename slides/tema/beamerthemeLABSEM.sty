@@ -1,0 +1,33 @@
+% ======================================================================
+% beamerthemeLABSEM.sty -- tema principal (carrega cores, inner e outer)
+% ----------------------------------------------------------------------
+% Derivado do "Aalborg Beamer Theme" / "AAU Sidebar Beamer Theme"
+% Copyright (c) 2011-2014 Jesper Kjaer Nielsen <jkn@es.aau.dk>
+% Modificacoes (c) 2026 Isaac Kosloski: identidade LABSEM/UFMS, 16:9,
+% LuaLaTeX, cabecalho compacto, barra lateral expansivel.
+% Sem logotipos nem imagens da AAU.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version. It is distributed WITHOUT ANY
+% WARRANTY. See <https://www.gnu.org/licenses/>.
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeLABSEM}[2026/09/26 v0.2 Tema LABSEM]
+\RequirePackage{tikz}
+\RequirePackage{labsem-marca}
+
+\DeclareOptionBeamer{width}{\PassOptionsToPackage{width=#1}{beamerouterthemeLABSEM}}
+\DeclareOptionBeamer{header}{\PassOptionsToPackage{header=#1}{beamerouterthemeLABSEM}}
+\DeclareOptionBeamer{hidetitle}{\PassOptionsToPackage{hidetitle}{beamerouterthemeLABSEM}}
+\DeclareOptionBeamer{hideinstitute}{\PassOptionsToPackage{hideinstitute}{beamerouterthemeLABSEM}}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+{
+  \usecolortheme{LABSEM}
+  \useinnertheme{LABSEM}
+  \useoutertheme{LABSEM}
+}
+\mode<all>

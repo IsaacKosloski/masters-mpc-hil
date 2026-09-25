@@ -1,0 +1,108 @@
+% ======================================================================
+% beamerinnerthemeLABSEM.sty -- capa, encerramento, itens e blocos
+% ----------------------------------------------------------------------
+% Derivado do "Aalborg Beamer Theme" / "AAU Sidebar Beamer Theme"
+% Copyright (c) 2011-2014 Jesper Kjaer Nielsen <jkn@es.aau.dk>
+% Modificacoes (c) 2026 Isaac Kosloski: identidade LABSEM/UFMS, 16:9,
+% LuaLaTeX, cabecalho compacto, barra lateral expansivel.
+% Sem logotipos nem imagens da AAU.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version. It is distributed WITHOUT ANY
+% WARRANTY. See <https://www.gnu.org/licenses/>.
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerinnerthemeLABSEM}[2026/09/26 v0.2 Inner LABSEM]
+\RequirePackage{tikz}
+\RequirePackage{labsem-marca}
+
+% ----------------------------------------------------------------------
+% Marca UFMS (arquivos oficiais, opcionais) em slides/tema/marcas/:
+%   ufms-positivo.pdf e ufms-negativo.pdf
+%   \ufmsmarca[altura]{positivo|negativo}
+% ----------------------------------------------------------------------
+\newcommand{\ufmsmarca}[2][8mm]{%
+  \IfFileExists{marcas/ufms-#2.pdf}{%
+    \includegraphics[height=#1]{marcas/ufms-#2.pdf}%
+  }{%
+    \IfFileExists{tema/marcas/ufms-#2.pdf}{%
+      \includegraphics[height=#1]{tema/marcas/ufms-#2.pdf}%
+    }{}%
+  }}
+
+\mode<presentation>
+{
+  \setbeamertemplate{blocks}[rounded]
+  \setbeamertemplate{itemize item}{%
+    \raisebox{0.15ex}{\tikz\fill[labsemAzul] (0,0) rectangle (0.9ex,0.9ex);}}
+  \setbeamertemplate{itemize subitem}{%
+    \raisebox{0.25ex}{\tikz\draw[labsemCobre, line width=0.5pt] (0,0) circle (0.35ex);}}
+  \setbeamertemplate{enumerate items}[default]
+  \setbeamertemplate{bibliography item}[text]
+
+  % --------------------------------------------------------------------
+  % Capa (usar em frame [plain])
+  % --------------------------------------------------------------------
+  \setbeamertemplate{title page}{%
+    \begin{tikzpicture}[remember picture, overlay]
+      % painel esquerdo com trilhas
+      \fill[labsemMarinho]
+        (current page.north west) rectangle
+        ([xshift=0.34\paperwidth]current page.south west);
+      \node[anchor=south west, inner sep=0] at (current page.south west)
+        {\labsemtrilhas{54}{90}{labsemAzul}{0.55}};
+      \node at ([xshift=0.17\paperwidth, yshift=0.08\paperheight]current page.west)
+        {\labsemvertical[1.7cm]{negativo}};
+      \fill[labsemCobre]
+        ([xshift=0.34\paperwidth]current page.north west) rectangle
+        ([xshift=0.34\paperwidth+1.2mm]current page.south west);
+      % textos
+      \node[anchor=west, text width=0.56\paperwidth, align=left]
+        at ([xshift=0.39\paperwidth, yshift=0.08\paperheight]current page.west) {%
+          {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+          \vspace{0.6em}
+          {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+          \vspace{1.4em}
+          {\usebeamerfont{author}\usebeamercolor[fg]{normal text}\insertauthor\par}
+          \vspace{0.3em}
+          {\usebeamerfont{institute}\usebeamercolor[fg]{normal text}\insertinstitute\par}
+          \vspace{0.3em}
+          {\usebeamerfont{date}\usebeamercolor[fg]{normal text}\insertdate\par}
+        };
+      \node[anchor=south east, inner sep=4mm] at (current page.south east)
+        {\ufmsmarca[9mm]{positivo}};
+    \end{tikzpicture}}
+
+  % --------------------------------------------------------------------
+  % Encerramento: fundo azul UFMS e marcas em negativo (Manual UFMS)
+  % --------------------------------------------------------------------
+  \defbeamertemplate*{final page}{LABSEM}[1]{%
+    \begin{tikzpicture}[remember picture, overlay]
+      \fill[labsemAzul] (current page.north west) rectangle (current page.south east);
+      \node[anchor=south west, inner sep=0] at (current page.south west)
+        {\labsemtrilhas{160}{90}{white}{0.18}};
+      \node[text=white, font=\usebeamerfont{title}]
+        at ([yshift=0.12\paperheight]current page.center) {#1};
+      \node at ([yshift=-0.12\paperheight]current page.center)
+        {\labsemassinatura[1.1cm]{negativo}};
+      \node[anchor=south east, inner sep=4mm] at (current page.south east)
+        {\ufmsmarca[9mm]{negativo}};
+    \end{tikzpicture}}
+  \newcommand{\finalpage}[1]{%
+    \setbeamertemplate{final page}[LABSEM]{#1}%
+    \usebeamertemplate{final page}}
+
+  % --------------------------------------------------------------------
+  % Fundo com trilhas para frames especiais:
+  %   {\labsemfundo \begin{frame}...\end{frame}}
+  % --------------------------------------------------------------------
+  \newcommand{\labsemfundo}{%
+    \setbeamertemplate{background canvas}{%
+      \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south west, inner sep=0] at (current page.south west)
+          {\labsemtrilhas{160}{90}{labsemAzul}{0.12}};
+      \end{tikzpicture}}}
+}
+\mode<all>

@@ -1,0 +1,203 @@
+% ======================================================================
+% beamerouterthemeLABSEM.sty -- cabecalho, barra lateral e navegacao
+% ----------------------------------------------------------------------
+% Derivado do "Aalborg Beamer Theme" / "AAU Sidebar Beamer Theme"
+% Copyright (c) 2011-2014 Jesper Kjaer Nielsen <jkn@es.aau.dk>
+% Modificacoes (c) 2026 Isaac Kosloski: identidade LABSEM/UFMS, 16:9,
+% LuaLaTeX, cabecalho compacto, barra lateral expansivel.
+% Sem logotipos nem imagens da AAU.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version. It is distributed WITHOUT ANY
+% WARRANTY. See <https://www.gnu.org/licenses/>.
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerouterthemeLABSEM}[2026/09/26 v0.2 Outer LABSEM]
+\RequirePackage{tikz}
+\RequirePackage{calc}
+\RequirePackage{amssymb}
+\RequirePackage{labsem-marca}
+
+% ----------------------------------------------------------------------
+% Opcoes
+%   width=<comp>     largura da barra lateral (padrao 2.2cm)
+%   header=<comp>    altura do cabecalho (padrao 8mm; 0mm remove a faixa)
+%   hidetitle        oculta o titulo curto na barra
+%   hideinstitute    oculta o instituto curto na barra
+% ----------------------------------------------------------------------
+\newlength{\labsem@width}
+\newlength{\labsem@height}
+\newlength{\labsem@barwidth}
+\setlength{\labsem@width}{2.2cm}
+\setlength{\labsem@height}{8mm}
+\setlength{\labsem@barwidth}{0.7mm}
+\DeclareOptionBeamer{width}{\setlength{\labsem@width}{#1}}
+\DeclareOptionBeamer{header}{\setlength{\labsem@height}{#1}}
+\DeclareOptionBeamer{hidetitle}{\def\labsem@hidetitle{true}}
+\DeclareOptionBeamer{hideinstitute}{\def\labsem@hideinst{true}}
+\ProcessOptionsBeamer
+
+% Rotulo do modulo corrente (o preambulo do deck pode redefinir)
+\providecommand{\moduloatual}{menu}
+
+\mode<presentation>
+{
+  \setbeamersize{sidebar width left=\labsem@width, sidebar width right=0pt}
+  \setbeamersize{text margin left=0.4cm, text margin right=0.4cm}
+  \setbeamertemplate{navigation symbols}{}
+
+  \setbeamerfont{frametitle}{size=\large, series=\bfseries}
+  \setbeamerfont{framesubtitle}{size=\small, series=\mdseries}
+  \setbeamerfont{title}{size=\LARGE, series=\bfseries}
+  \setbeamerfont{subtitle}{size=\large}
+  \setbeamerfont{part in sidebar}{size=\tiny, series=\bfseries}
+  \setbeamerfont{section in sidebar}{size=\tiny, series=\bfseries}
+  \setbeamerfont{subsection in sidebar}{size=\tiny}
+  \setbeamerfont{institute in sidebar}{size=\tiny}
+  \setbeamerfont{button}{size=\tiny}
+
+  % --------------------------------------------------------------------
+  % Titulo do frame: uma linha na altura do cabecalho; subtitulo ao lado
+  % --------------------------------------------------------------------
+  \defbeamertemplate*{frametitle}{LABSEM}{%
+    \ifdim\labsem@height>0pt
+      \begin{minipage}[c][\labsem@height][c]{\textwidth}
+        \usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}%
+        \insertframetitle
+        \ifx\insertframesubtitle\@empty\else
+          {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}%
+            \enspace\textbar\enspace\insertframesubtitle}%
+        \fi
+      \end{minipage}%
+    \else
+      \vskip2mm
+      {\usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}\insertframetitle\par}%
+      {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \fi}
+
+  % --------------------------------------------------------------------
+  % Barra lateral: titulo curto, bloco (part), modulos do bloco;
+  % so o modulo atual se expande e mostra seus topicos.
+  % --------------------------------------------------------------------
+  \defbeamertemplate*{sidebar left}{LABSEM}{%
+    \labsem@fundo%
+    \vspace*{\labsem@height}%
+    \vspace{2mm}\par
+    \ifx\labsem@hidetitle\undefined
+      \labsem@navitem{3pt}{title in sidebar}{%
+        \usebeamerfont{part in sidebar}\insertshorttitle}%
+    \fi
+    \ifx\insertpart\@empty\else
+      \labsem@navitem{3pt}{part in sidebar}{%
+        \usebeamerfont{part in sidebar}\MakeUppercase{\insertshortpart}}%
+      \vspace{0.5mm}%
+    \fi
+    \insertverticalnavigation{\labsem@width}%
+    \vfill
+    \labsem@botoes
+    \ifx\labsem@hideinst\undefined
+      \labsem@navitem{3pt}{author in sidebar}{%
+        \usebeamerfont{institute in sidebar}\insertshortinstitute}%
+    \fi
+    \vspace{1mm}}
+
+  % Modulo atual (expandido) e demais modulos do bloco
+  \defbeamertemplate*{section in sidebar}{LABSEM}{%
+    \labsem@navitem{3pt}{section in sidebar}{%
+      \labsem@frameatual{\insertframenumber}%
+      \usebeamerfont{section in sidebar}\labsem@seta{$\blacktriangledown$}\insertsectionhead}}
+  \defbeamertemplate*{section in sidebar shaded}{LABSEM}{%
+    \labsem@navitem{3pt}{section in sidebar shaded}{%
+      \usebeamerfont{section in sidebar}\labsem@seta{$\blacktriangleright$}\insertsectionhead}}
+
+  % Topicos do modulo atual
+  \defbeamertemplate*{subsection in sidebar}{LABSEM}{%
+    \labsem@navitem{11pt}{subsection in sidebar}{%
+      \labsem@frameatual{\insertframenumber}%
+      \usebeamerfont{subsection in sidebar}\insertsubsectionhead}}
+  \defbeamertemplate*{subsection in sidebar shaded}{LABSEM}{%
+    \labsem@navitem{11pt}{subsection in sidebar shaded}{%
+      \usebeamerfont{subsection in sidebar}\insertsubsectionhead}}
+
+  % So o modulo atual mostra os topicos (comportamento "expansivel")
+  \beamer@nav@subsectionstyle{show/show/hide}
+
+  % --------------------------------------------------------------------
+  % Rodape: marca UFMS no canto inferior direito (Manual UFMS)
+  % --------------------------------------------------------------------
+  \setbeamertemplate{footline}{%
+    \hfill\raisebox{1.5mm}{\ufmsmarca[4.5mm]{positivo}}\hspace*{2mm}}
+}
+\mode<all>
+
+% ----------------------------------------------------------------------
+% Fundo do cabecalho e da barra (desenhado a partir da barra lateral)
+% ----------------------------------------------------------------------
+\newcommand{\labsem@fundo}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (UC) at (\paperwidth, 0);
+    \coordinate (LC) at (0, -\paperheight);
+    \coordinate (BS) at (\paperwidth, -\labsem@height);
+    \coordinate (BE) at (\labsem@width + \labsem@barwidth/2, -\paperheight);
+    \coordinate (IS) at (BS -| BE);
+    {%
+      \usebeamercolor{palette sidebar primary}%
+      \fill[fill=palette sidebar primary.bg]
+        (BS) -- (IS) -- (BE) -- (LC) |- (UC) -- cycle;
+    }
+    {%
+      \usebeamercolor{LABSEM}%
+      \draw[color=fg, line width=\labsem@barwidth] (BS) -- (IS) -- (BE);
+    }
+    \ifdim\labsem@height>0pt
+      \node[anchor=west, inner sep=0] at (1.5mm, -\labsem@height/2)
+        {\labsem@marcacompacta};
+    \fi
+  \end{tikzpicture}}
+
+% Simbolo + "LABSEM" cabendo no canto do cabecalho
+\newcommand{\labsem@marcacompacta}{%
+  \labsemsimbolo[0.62\labsem@height]{cor}%
+  \hspace{1mm}%
+  {\color{labsemMarinho}\fontsize{7.5}{8}\selectfont\bfseries LABSEM}}
+
+% Botoes de navegacao em uma linha
+\newcommand{\labsem@botoes}{%
+  \begin{beamercolorbox}[wd=\labsem@width, leftskip=2pt, rightskip=0pt plus1fil,
+      vmode]{author in sidebar}
+    \vskip0.35ex
+    \scalebox{0.85}{%
+      \hyperlink{menu}{\beamergotobutton{Menu}}\hspace{0.5pt}%
+      \hyperlink{\moduloatual}{\beamerskipbutton{Mód.}}\hspace{0.5pt}%
+      \Acrobatmenu{GoBack}{\beamerreturnbutton{}}}\par
+    \vskip0.35ex
+  \end{beamercolorbox}}
+
+% Seta de expansao antes do nome do modulo
+\newcommand{\labsem@seta}[1]{\makebox[1.6ex][l]{\scalebox{0.7}{#1}}}
+
+% Item de navegacao da barra (texto quebra dentro da largura)
+\newcommand{\labsem@navitem}[3]{%
+  \begin{beamercolorbox}[wd=\labsem@width, leftskip=#1,
+      rightskip=1.2ex plus1fil, vmode]{#2}
+    \vskip0.35ex
+    #3\par
+    \vskip0.35ex
+  \end{beamercolorbox}}
+
+% Numero do frame no circulo sobre a barra, ligado ao item atual
+\newcommand{\labsem@frameatual}[1]{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (CS) at (0, 0.6ex);
+    \coordinate (CF) at (IS |- CS);
+    {%
+      \usebeamercolor{palette sidebar primary}%
+      \usebeamercolor{LABSEM}%
+      \draw[color=bg, line width=\labsem@barwidth] (BS) -| (CF);
+      \node[fill=palette sidebar primary.bg, draw=LABSEM.bg, circle,
+            minimum width=3.4mm, inner sep=0.4pt, thick] at (CF)
+        {\fontsize{4.5}{5}\selectfont\color{labsemMarinho}#1};
+    }
+  \end{tikzpicture}}
