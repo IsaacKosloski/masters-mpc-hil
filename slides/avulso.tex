@@ -1,0 +1,30 @@
+% ======================================================================
+% Compila UM modulo isolado (links para outros modulos ficam inativos).
+%   .\tools\slides.ps1 r01-git
+% equivale a:
+%   latexmk -jobname=r01-git "-usepretex=\def\arquivo{r01-git}" avulso.tex
+% ======================================================================
+\documentclass[aspectratio=169, 10pt]{beamer}
+\input{preambulo/preambulo}
+
+\title[MPC com HiL]{Notas de aula -- \arquivo}
+\author{Isaac Kosloski}
+\institute[LABSEM · UFMS]{%
+  Laboratório de Sistemas Embarcados (LABSEM)\\
+  FAENG · UFMS}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[plain, noframenumbering]
+  \titlepage
+\end{frame}
+\input{menus}
+\input{modulos/\arquivo}
+
+\appendix
+\IfFileExists{modulos/\arquivo-apendice.tex}{%
+  \input{modulos/\arquivo-apendice}%
+}{}
+
+\end{document}

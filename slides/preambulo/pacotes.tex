@@ -1,0 +1,42 @@
+% ======================================================================
+% Pacotes (LuaLaTeX)
+% ======================================================================
+
+% ---------- Idioma e fontes ----------
+\usepackage[brazilian]{babel}
+\usepackage{fontspec}
+\IfFontExistsTF{Fira Sans}{%
+  \setsansfont{Fira Sans}[
+    BoldFont       = {Fira Sans SemiBold},
+    BoldItalicFont = {Fira Sans SemiBold Italic}]%
+}{%
+  \setsansfont{Latin Modern Sans}%
+}
+\IfFontExistsTF{Fira Mono}{%
+  \setmonofont{Fira Mono}[Scale=0.9]%
+}{%
+  \setmonofont{Latin Modern Mono}%
+}
+
+% ---------- Matematica, unidades, tabelas, simbolos ----------
+\usepackage{amsmath, amssymb, mathtools, bm}
+\usepackage[locale=DE]{siunitx}      % virgula decimal
+\usepackage{booktabs, tabularx, multirow}
+\usepackage{multicol}
+\usepackage{pifont}                  % \ding{51} (certo), \ding{55} (errado)
+\usepackage{graphicx}
+
+% ---------- Figuras ----------
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, shapes.geometric, fit, backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---------- Estrutura ----------
+\usepackage{appendixnumberbeamer}    % apendice nao conta no total de frames
+\hypersetup{
+  pdftitle         = {MPC com Hardware-in-the-Loop -- notas de aula},
+  pdfauthor        = {Isaac Kosloski},
+  bookmarksopen    = true,
+  bookmarksopenlevel = 2,
+}

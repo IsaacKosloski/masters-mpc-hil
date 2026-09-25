@@ -1,0 +1,33 @@
+% ======================================================================
+% Codigo (listings: dispensa -shell-escape)
+% autogobble: o conteudo de lstlisting pode ser indentado junto com o frame
+% ======================================================================
+\usepackage{listings}
+\usepackage{lstautogobble}
+\lstset{
+  autogobble        = true,
+  basicstyle        = \ttfamily\scriptsize,
+  keywordstyle      = \color{labsemMarinho}\bfseries,
+  commentstyle      = \color{labsemGrafite!60}\itshape,
+  stringstyle       = \color{labsemVerde},
+  numberstyle       = \tiny\color{labsemGrafite!60},
+  breaklines        = true,
+  columns           = fullflexible,
+  keepspaces        = true,
+  showstringspaces  = false,
+  frame             = single,
+  rulecolor         = \color{labsemGrafite!25},
+  backgroundcolor   = \color{labsemCinza},
+  aboveskip         = 4pt,
+  belowskip         = 4pt,
+}
+\lstdefinestyle{bash}{language=bash}
+\lstdefinestyle{ps}{language=bash}   % PowerShell: realce aproximado
+\lstdefinestyle{vhdl}{language=VHDL}
+\lstdefinestyle{tcl}{language=tcl}
+\lstdefinestyle{matlab}{language=Matlab}
+\lstdefinestyle{python}{language=Python}
+
+% Codigo de arquivo do repositorio (caminho relativo a slides/):
+%   \codigo[style=vhdl, linerange=10-25]{../m1-revisao-modelagem/ex01/hdl/mux.vhd}
+\newcommand{\codigo}[2][]{\lstinputlisting[#1]{#2}}
