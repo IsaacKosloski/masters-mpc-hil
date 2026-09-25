@@ -1,0 +1,94 @@
+# ===== Gerados pelo próprio repositório =====
+out/
+build/
+
+# ===== Intel Quartus Prime =====
+db/
+incremental_db/
+output_files/
+simulation/
+greybox_tmp/
+hc_output/
+qdb/
+.qsys_edit/
+*.qws
+*.qarlog
+*.qar
+*.jdi
+*.sld
+*.smsg
+*.summary
+*.done
+*.rpt
+*.sof
+*.pof
+*.jic
+*.bak
+*_assignment_defaults.qdf
+PLLJ_PLLSPE_INFO.txt
+c5_pin_model_dump.txt
+qar_info.json
+
+# ===== ModelSim / Questa =====
+work/
+*_lib/
+transcript
+modelsim.ini
+*.wlf
+wlf*
+*.vstf
+*.mpf
+*.cr.mti
+
+# ===== GHDL =====
+*.cf
+*.o
+*.ghw
+*.vcd
+
+# ===== MATLAB / Simulink =====
+*.asv
+*.m~
+*.autosave
+slprj/
+codegen/
+*.slxc
+*.mex*
+sccprj/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# ===== LaTeX =====
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.xdv
+_minted*/
+slides/build/
+
+# ===== Editores e SO =====
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

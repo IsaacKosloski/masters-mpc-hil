@@ -1,0 +1,13 @@
+{
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.do": "tcl",
+    "*.sdc": "tcl",
+    "*.qsf": "tcl",
+    "*.mti": "tcl"
+  },
+  "editor.rulers": [80, 100],
+  "git.inputValidationSubjectLength": 72
+}

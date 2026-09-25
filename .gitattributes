@@ -1,0 +1,28 @@
+# Padrão: texto normalizado, sempre LF no repositório e no disco
+* text=auto eol=lf
+
+# Scripts do Windows exigem CRLF
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binários (nunca converter, nunca fazer diff textual)
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.zip  binary
+*.gz   binary
+*.slx  binary
+*.mdl  binary
+*.mat  binary
+*.xlsx binary
+*.sof  binary
+*.pof  binary
+
+# Estatística de linguagem no GitHub
+*.do   linguist-language=Tcl
+*.sdc  linguist-language=Tcl
+*.qsf  linguist-language=Tcl
+common/hdl/vendor/** linguist-vendored

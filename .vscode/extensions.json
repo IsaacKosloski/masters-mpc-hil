@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "bitwisecook.tcl",
+    "hbohlin.vhdl-ls",
+    "ms-python.python",
+    "MathWorks.language-matlab",
+    "James-Yu.latex-workshop",
+    "github.vscode-github-actions",
+    "redhat.vscode-yaml"
+  ]
+}
