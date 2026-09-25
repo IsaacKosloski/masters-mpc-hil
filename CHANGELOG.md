@@ -5,7 +5,7 @@ versionamento conforme [docs/convencoes.md](docs/convencoes.md).
 
 ## [Não lançado]
 
-## [0.1.0] - AAAA-MM-DD
+## [0.1.0] - 2026-09-25
 ### Adicionado
 - Repositório base: README, licenças, `.gitignore`, `.gitattributes`, `.editorconfig`.
 - Esqueleto do monorepo (ADR-0002) e registro de decisões (ADR-0001).
