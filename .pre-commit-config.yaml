@@ -1,0 +1,26 @@
+# Instalação: pre-commit install   (instala os hooks pre-commit e commit-msg)
+# Atualizar versões: pre-commit autoupdate
+default_install_hook_types: [pre-commit, commit-msg]
+exclude: ^common/hdl/vendor/
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=no]
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]

@@ -1,0 +1,13 @@
+# Categorias das notas de release geradas automaticamente (por label do PR)
+changelog:
+  categories:
+    - title: Funcionalidades
+      labels: [tipo:feat]
+    - title: Correções
+      labels: [tipo:fix]
+    - title: Documentação e slides
+      labels: [tipo:docs]
+    - title: CI, build e manutenção
+      labels: [tipo:ci, tipo:chore]
+    - title: Outros
+      labels: ["*"]
