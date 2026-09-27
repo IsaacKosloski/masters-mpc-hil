@@ -1,0 +1,21 @@
+% labsem-diagramas.sty — estilo de diagramas de blocos LABSEM (TikZ)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labsem-diagramas}[2026/09/26 v2.0.0]
+\RequirePackage{tikz}
+\RequirePackage{labsem-cores}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\tikzset{
+  labsem/.style={line width=0.6pt, draw=labsemGrafite, >={Stealth[length=2.2mm,width=1.6mm]},
+                 font=\small, node distance=9mm and 12mm},
+  bloco/.style={rectangle, rounded corners=1.2mm, draw=labsemGrafite, fill=labsemMarfim,
+                minimum width=22mm, minimum height=10mm, align=center},
+  bloco destaque/.style={bloco, fill=labsemGrafite, text=labsemMarfim},
+  bloco analogico/.style={bloco, dash pattern=on 2pt off 0pt},
+  bloco digital/.style={bloco, dotted},
+  somador/.style={circle, draw=labsemGrafite, fill=labsemMarfim, inner sep=0pt, minimum size=5mm},
+  sinal/.style={->, draw=labsemGrafite},
+  realimentacao/.style={->, draw=labsemPedra},
+  conversao/.style={circle, fill=labsemCobre, inner sep=0pt, minimum size=2.2mm},
+  rotulo/.style={font=\ttfamily\scriptsize, text=labsemPedra},
+}
+\endinput

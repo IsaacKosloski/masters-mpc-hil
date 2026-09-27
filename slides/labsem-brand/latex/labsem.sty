@@ -1,0 +1,95 @@
+% =====================================================================
+%  labsem.sty — núcleo da identidade LABSEM para LaTeX (XeLaTeX/LuaLaTeX)
+%  Opções:  marca=a|b   (marca principal; a outra vira arte auxiliar)
+%           lang=pt|en
+%  Caminho dos assets: \def\LabsemAssets{<caminho>/assets/} antes do \usepackage
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labsem}[2026/09/26 v2.0.0 LABSEM]
+\RequirePackage{pgfopts}
+\def\labsem@marca{a}\def\labsem@lang{pt}
+\pgfkeys{/labsem/.cd,
+  marca/.code={\edef\labsem@marca{#1}},
+  lang/.code={\edef\labsem@lang{#1}}}
+\ProcessPgfPackageOptions{/labsem}
+\providecommand\LabsemAssets{../../assets/}
+
+% ------------------------------------------------ marca principal e auxiliar
+\def\labsem@tmpa{a}
+\ifx\labsem@marca\labsem@tmpa \def\labsem@aux{b}\else \def\labsem@aux{a}\fi
+\newcommand\labsemMarca{\labsem@marca}
+\newcommand\labsemMarcaAux{\labsem@aux}
+
+% ------------------------------------------------ idioma
+\newif\iflabsem@en
+\def\labsem@tmpen{en}\ifx\labsem@lang\labsem@tmpen\labsem@entrue\fi
+\newcommand\labsemT[2]{\iflabsem@en#2\else#1\fi}
+\RequirePackage{fontspec}
+\RequirePackage{polyglossia}
+\iflabsem@en\setmainlanguage{english}\else
+  \IfFileExists{loadhyph-pt.tex}{\setmainlanguage[variant=brazilian]{portuguese}}{\setmainlanguage{english}}\fi
+
+% ------------------------------------------------ cores (paleta v2.0.0)
+\RequirePackage{xcolor}
+\IfFileExists{\LabsemAssets cores/labsem-cores.sty}
+  {\input{\LabsemAssets cores/labsem-cores.sty}}
+  {\definecolor{labsemGrafite}{HTML}{121418}\definecolor{labsemMarfim}{HTML}{F2EEE6}
+   \definecolor{labsemCobre}{HTML}{B9793F}\definecolor{labsemAzulNoturno}{HTML}{1B2A3F}
+   \definecolor{labsemPedra}{HTML}{8C9097}}
+\colorlet{labsemTexto}{labsemGrafite}
+
+% ------------------------------------------------ tipografia (IBM Plex)
+\def\labsem@fp{\LabsemAssets fontes/}
+\setmainfont{IBMPlexSans}[Path=\labsem@fp,Extension=.otf,UprightFont=*-Regular,
+  BoldFont=*-SemiBold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]
+\setsansfont{IBMPlexSans}[Path=\labsem@fp,Extension=.otf,UprightFont=*-Regular,
+  BoldFont=*-SemiBold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]
+\setmonofont{IBMPlexMono}[Path=\labsem@fp,Extension=.otf,UprightFont=*-Regular,BoldFont=*-SemiBold]
+\newfontfamily\labsemFonteMarca{IBMPlexSans}[Path=\labsem@fp,Extension=.otf,UprightFont=*-Medium,LetterSpace=28]
+\newfontfamily\labsemFonteTitulo{IBMPlexSans}[Path=\labsem@fp,Extension=.otf,UprightFont=*-Medium,BoldFont=*-SemiBold]
+\newcommand\labsemLegenda[1]{{\ttfamily\footnotesize\addfontfeature{LetterSpace=8}\MakeUppercase{#1}}}
+
+% ------------------------------------------------ logotipos
+\RequirePackage{graphicx}
+\@namedef{labsem@txt@imagotipo}{}\@namedef{labsem@txt@imagotipo-vertical}{}
+\@namedef{labsem@txt@isologo}{}\@namedef{labsem@txt@logotipo}{}\@namedef{labsem@txt@selo}{}
+% \labsem@arquivo{marca}{versao}{cor}
+\newcommand\labsem@arquivo[3]{\LabsemAssets marca-#1/pdf/labsem-#1-#2\ifcsname labsem@txt@#2\endcsname-\labsem@lang\fi-#3.pdf}
+% \labsemLogo[opções]{versão}{cor}   — marca principal
+\newcommand\labsemLogo[3][]{\includegraphics[#1]{\labsem@arquivo{\labsem@marca}{#2}{#3}}}
+% \labsemAuxiliar[opções]{versão}{cor} — a outra marca, como arte auxiliar
+\newcommand\labsemAuxiliar[3][]{\includegraphics[#1]{\labsem@arquivo{\labsem@aux}{#2}{#3}}}
+% \labsemFundo[opções]{grafite|marfim}  — fundo 16:9 da arte auxiliar
+\newcommand\labsemFundo[2][]{\includegraphics[#1]{\LabsemAssets linguagem/padroes/labsem-\labsem@aux-fundo-16x9-#2.pdf}}
+% \labsemIcone[opções]{nome}{grafite|marfim}
+\newcommand\labsemIcone[3][]{\includegraphics[#1]{\LabsemAssets linguagem/icones/icone-#2-#3.pdf}}
+
+% ------------------------------------------------ marcas institucionais (co-branding)
+% Coloque os arquivos oficiais em assets/institucional/ (ufms-marca-positivo.pdf, ufms-marca-negativo.pdf,
+% faeng-marca-positivo.pdf ...). Enquanto não existirem, aparece um espaço reservado.
+\RequirePackage{tikz}
+\newcommand\labsem@reservado[3]{\tikz\node[draw=#3,dashed,line width=0.4pt,minimum height=#1,
+  minimum width=2.4*#1,font=\ttfamily\tiny,text=#3,inner sep=1pt]{#2};}
+% \labsemInstitucional{ufms|faeng|cnpq|...}{positivo|negativo}{altura}
+\newcommand\labsemInstitucional[3]{\IfFileExists{\LabsemAssets institucional/#1-marca-#2.pdf}
+  {\includegraphics[height=#3]{\LabsemAssets institucional/#1-marca-#2.pdf}}
+  {\labsem@reservado{#3}{\MakeUppercase{#1}}{labsemPedra}}}
+\newcommand\labsemUFMS[2][positivo]{\labsemInstitucional{ufms}{#1}{#2}}
+\newcommand\labsemFAENG[2][positivo]{\labsemInstitucional{faeng}{#1}{#2}}
+
+% ------------------------------------------------ textos padrão
+\newcommand\labsemNome{\labsemT{Laboratório de Sistemas Embarcados}{Embedded Systems Laboratory}}
+\newcommand\labsemInstituicao{\labsemT{Faculdade de Engenharias, Arquitetura e Urbanismo e Geografia · UFMS}
+                                      {Faculty of Engineering, Architecture, Urbanism and Geography · UFMS}}
+\newcommand\labsemTagline{\labsemT{Do sinal à solução.}{From signal to solution.}}
+
+% ------------------------------------------------ código (listings)
+\RequirePackage{listings}
+\lstdefinelanguage{VHDL-LABSEM}[]{VHDL}{morekeywords={rising_edge,signed,unsigned,resize,std_logic,std_logic_vector}}
+\lstset{basicstyle=\ttfamily\footnotesize, keywordstyle=\color{labsemCobre},
+  commentstyle=\color{labsemPedra}\itshape, stringstyle=\color{labsemAzulNoturno},
+  numbers=left, numberstyle=\ttfamily\tiny\color{labsemPedra}, numbersep=6pt,
+  frame=l, framerule=1.2pt, rulecolor=\color{labsemCobre}, xleftmargin=14pt,
+  columns=fullflexible, keepspaces=true, showstringspaces=false, breaklines=true,
+  literate={á}{{\'a}}1 {ã}{{\~a}}1 {ç}{{\c{c}}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1}
+\endinput
