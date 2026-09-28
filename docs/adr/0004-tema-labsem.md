@@ -1,6 +1,6 @@
 # 0004 — Tema LABSEM (derivado do AAU Sidebar) e identidade visual
 
-- **Status:** Aceito — substitui a parte "tema" do ADR-0003
+- **Status:** Substituído por 0006 (antes: aceito, substituindo a parte "tema" do ADR-0003)
 - **Data:** AAAA-MM-DD
 
 ## Contexto

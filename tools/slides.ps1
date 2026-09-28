@@ -19,7 +19,8 @@ $slides = Join-Path $PSScriptRoot "..\slides"
 
 function Invoke-Latexmk {
     param([string[]]$Argumentos)
-    & latexmk @Argumentos
+    # -interaction/-halt-on-error: tambem valem quando -usepretex troca os comandos do latexmkrc
+    & latexmk -interaction=nonstopmode -halt-on-error @Argumentos
     if ($LASTEXITCODE -ne 0) {
         throw "latexmk falhou (codigo $LASTEXITCODE). Veja slides\build\*.log"
     }

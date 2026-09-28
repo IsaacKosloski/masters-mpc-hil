@@ -1,7 +1,7 @@
 # Instalação: pre-commit install   (instala os hooks pre-commit e commit-msg)
 # Atualizar versões: pre-commit autoupdate
 default_install_hook_types: [pre-commit, commit-msg]
-exclude: ^common/hdl/vendor/
+exclude: ^(common/hdl/vendor/|slides/labsem-brand/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

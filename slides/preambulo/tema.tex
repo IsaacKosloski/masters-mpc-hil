@@ -1,6 +1,12 @@
 % ======================================================================
-% Tema LABSEM (slides/tema/)
-%   width  = largura da barra lateral
-%   header = altura da faixa superior (0mm remove a faixa)
+% Tema LABSEMdisciplina (slides/labsem-brand/latex/beamer/)
+%   marca   = a | b          marca principal; a outra vira arte auxiliar
+%   lang    = pt | en
+%   largura = largura da barra lateral (padrao 2.6cm)
+%   final   = ufms | labsem  slide final azul UFMS (MIV) ou grafite
 % ======================================================================
-\usetheme[width=2.2cm, header=8mm]{LABSEM}
+\IfFileExists{labsem-brand/assets/cores/labsem-cores.sty}
+  {\def\LabsemAssets{labsem-brand/assets/}}
+  {\def\LabsemAssets{../labsem-brand/assets/}}
+\providecommand\MARCA{a}
+\usetheme[marca=\MARCA, lang=pt, largura=2.6cm, final=ufms]{LABSEMdisciplina}

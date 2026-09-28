@@ -1,0 +1,284 @@
+% =====================================================================
+%  beamerthemeLABSEMdisciplina.sty — tema de DISCIPLINAS com barra lateral
+%  LABSEM · FAENG · UFMS — código original (licença MIT, ver LICENSE.md)
+%
+%  \usetheme[marca=a|b, lang=pt|en, largura=2.6cm, final=ufms|labsem,
+%            divisor=true|false, compat=true|false, janela=3]{LABSEMdisciplina}
+%
+%  Estrutura do deck:
+%    \bloco[curto]{Título}                 → \part     (cabeçalho da barra lateral)
+%    \modulo[curto]{rotulo}{Título}        → \section  + quadro de abertura do módulo
+%    \subsection[curto]{Título}            → tópico (expandido só no módulo atual)
+%    \emconstrucao[curto]{rotulo}{Título}  → módulo ainda não escrito
+%  Navegação: \irpara{rotulo}{Texto} · \voltar · \verrevisao{r07} · \resposta{rotulo}
+%             \botaomenu[código]{rotulo}{Texto}
+%  Encerramento: \finalpage{Obrigado!}   (em frame [plain])
+% =====================================================================
+\mode<presentation>
+\def\lbd@marca{a}\def\lbd@lang{pt}\def\lbd@final{ufms}\def\lbd@divisor{true}\def\lbd@compat{true}\def\lbd@janela{3}
+\newlength\lbd@W \setlength\lbd@W{2.6cm}
+\DeclareOptionBeamer{marca}{\edef\lbd@marca{#1}}
+\DeclareOptionBeamer{lang}{\edef\lbd@lang{#1}}
+\DeclareOptionBeamer{largura}{\setlength\lbd@W{#1}}
+\DeclareOptionBeamer{final}{\edef\lbd@final{#1}}
+\DeclareOptionBeamer{divisor}{\edef\lbd@divisor{#1}}
+\DeclareOptionBeamer{compat}{\edef\lbd@compat{#1}}
+\DeclareOptionBeamer{janela}{\edef\lbd@janela{#1}}   % módulos exibidos antes/depois do atual (0 = todos)
+\ProcessOptionsBeamer
+\RequirePackage[marca=\lbd@marca,lang=\lbd@lang]{labsem}
+\RequirePackage{tcolorbox,amssymb,multicol,xparse}
+\tcbuselibrary{skins}
+\usetikzlibrary{calc}
+
+% ------------------------------------------------ cores
+\definecolor{lbdSidebar}{HTML}{121418}
+\definecolor{lbdSidebarTexto}{HTML}{8C9097}
+\definecolor{lbdCartao}{HTML}{E7E2D8}
+\definecolor{labsemAzulUFMS}{HTML}{0088B7}
+\def\lbd@true{true}
+\ifx\lbd@compat\lbd@true   % aliases da paleta antiga (módulos existentes compilam sem mudança)
+  \colorlet{labsemMarinho}{labsemAzulNoturno}
+  \colorlet{labsemGelo}{lbdCartao}
+  \colorlet{labsemCinza}{lbdCartao}
+  \definecolor{labsemVerde}{HTML}{5B8C6E}      % pátina
+  \definecolor{labsemVermelho}{HTML}{A8452F}   % óxido
+  \colorlet{labsemAzul}{labsemAzulUFMS}
+\fi
+\setbeamercolor{background canvas}{bg=labsemMarfim}
+\setbeamercolor{normal text}{fg=labsemGrafite,bg=labsemMarfim}
+\setbeamercolor{structure}{fg=labsemCobre}
+\setbeamercolor{alerted text}{fg=labsemCobre}
+\setbeamercolor{frametitle}{fg=labsemGrafite}
+\setbeamercolor{item}{fg=labsemCobre}
+\setbeamercolor{sidebar left}{bg=lbdSidebar,fg=lbdSidebarTexto}
+\setbeamercolor{section in sidebar}{fg=labsemMarfim}
+\setbeamercolor{section in sidebar shaded}{fg=lbdSidebarTexto}
+\setbeamercolor{subsection in sidebar}{fg=labsemMarfim}
+\setbeamercolor{subsection in sidebar shaded}{fg=lbdSidebarTexto}
+\setbeamercolor{button}{fg=labsemCobre,bg=labsemMarfim}
+
+% ------------------------------------------------ fontes e geometria
+\usefonttheme{professionalfonts}
+\setbeamerfont{frametitle}{family=\labsemFonteTitulo,size=\Large}
+\setbeamerfont{title}{family=\labsemFonteTitulo,size=\huge}
+\setbeamerfont{section in sidebar}{size=\fontsize{6.3}{7.2}\selectfont}
+\setbeamerfont{subsection in sidebar}{size=\fontsize{5.4}{6.2}\selectfont}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{sidebar width left=\lbd@W, sidebar width right=0pt}
+\setbeamersize{text margin left=7mm, text margin right=7mm}
+\setbeamertemplate{itemize item}{\tikz[baseline=-0.6ex]\fill[labsemCobre](0,0)circle(0.55ex);}
+\setbeamertemplate{itemize subitem}{\tikz[baseline=-0.6ex]\draw[labsemCobre,line width=0.5pt](0,0)circle(0.5ex);}
+\setbeamertemplate{itemize subsubitem}{\tikz[baseline=-0.6ex]\fill[labsemPedra](0,0)circle(0.4ex);}
+\setbeamertemplate{enumerate item}{{\ttfamily\color{labsemCobre}\insertenumlabel.}}
+\setbeamertemplate{caption}{\raggedright\labsemLegenda{\insertcaption}\par}
+
+% ------------------------------------------------ estado do módulo atual
+\providecommand\moduloatual{menu}
+\def\lbd@modcurto{}
+
+% ------------------------------------------------ barra lateral
+\setbeamertemplate{sidebar canvas left}{\color{lbdSidebar}\vrule width\lbd@W height\paperheight}
+\newcommand\lbd@item[3]{% recuo, cor beamer, conteúdo
+  \begin{beamercolorbox}[wd=\lbd@W,leftskip=#1,rightskip=2mm plus 1fil,vmode]{#2}
+    \vskip0.22ex #3\par\vskip0.22ex\end{beamercolorbox}}
+\setbeamertemplate{sidebar left}{%
+  \vskip4mm
+  \hbox to\lbd@W{\hskip4mm\labsemLogo[width=\dimexpr\lbd@W-9mm\relax]{logotipo}{negativo}\hss}%
+  \vskip2mm
+  \lbd@item{4mm}{sidebar left}{\ttfamily\tiny\color{lbdSidebarTexto}\insertshorttitle}%
+  \vskip2mm
+  \ifx\insertpart\@empty\else
+    \lbd@item{4mm}{sidebar left}{{\color{labsemCobre}\rule[0.5ex]{3mm}{0.5pt}}\hspace{1mm}%
+      {\ttfamily\tiny\color{labsemCobre}\MakeUppercase{\insertshortpart}}}%
+    \vskip1mm
+  \fi
+  \insertverticalnavigation{\lbd@W}%
+  \vfill
+  % progresso (quadros numerados; apêndice não conta)
+  \hbox to\lbd@W{\hskip4mm{\ttfamily\tiny\color{lbdSidebarTexto}%
+    \ifnum\insertframenumber<10 0\fi\insertframenumber\,/\,\inserttotalframenumber}\hss}%
+  \vskip1mm
+  \hbox to\lbd@W{\hskip4mm\tikz{\fill[labsemPedra!35!lbdSidebar](0,0)rectangle(\lbd@W-8mm,0.5mm);
+      \pgfmathsetmacro\lbdfr{min(1,\insertframenumber/max(1,\inserttotalframenumber))}
+      \fill[labsemCobre](0,0)rectangle({\lbdfr*(\lbd@W-8mm)},0.5mm);}\hss}%
+  \vskip2mm
+  \hbox to\lbd@W{\hskip4mm\lbd@botao{menu}{\labsemT{MENU}{MENU}}\hskip1mm
+    \lbd@botao{\moduloatual}{\labsemT{MÓD.}{MOD.}}\hskip1mm
+    \Acrobatmenu{GoBack}{\lbd@pill{↶}}\hss}%
+  \vskip3mm}
+\newcommand\lbd@pill[1]{\tikz[baseline=(b.base)]\node[draw=lbdSidebarTexto,rounded corners=1.2mm,
+  inner xsep=1.1mm,inner ysep=0.7mm,font=\ttfamily\fontsize{4.5}{5}\selectfont,text=labsemMarfim](b){#1};}
+\newcommand\lbd@botao[2]{\hyperlink{#1}{\lbd@pill{#2}}}
+
+% módulos (seções) e tópicos (subseções)
+% módulo atual (▾, marfim) e demais módulos do bloco (▸, pedra).
+% Quando há um tópico ativo, o beamer usa o modelo "shaded" também para o módulo atual:
+% por isso comparamos \insertsectionheadnumber com \insertsectionnumber.
+\newcommand\lbd@modatual{\lbd@item{5.6mm}{section in sidebar}{\noindent\llap{\makebox[2.6mm][l]{\color{labsemCobre}\scalebox{0.62}{$\blacktriangledown$}}}%
+    {\usebeamerfont{section in sidebar}\color{labsemMarfim}\insertsectionhead}}}
+\newcommand\lbd@modoutro{\lbd@item{5.6mm}{section in sidebar shaded}{\noindent\llap{\makebox[2.6mm][l]{\scalebox{0.62}{$\blacktriangleright$}}}%
+    {\usebeamerfont{section in sidebar}\insertsectionhead}}}
+\setbeamertemplate{section in sidebar}{\lbd@modatual}
+\newcount\lbd@dif
+\newcommand\lbd@reticencias{\lbd@item{5.6mm}{section in sidebar shaded}{\tikz[baseline=-0.4ex]{\foreach \i in {0,1,2}\fill[lbdSidebarTexto](\i*1mm,0)circle(0.25mm);}}}
+\setbeamertemplate{section in sidebar shaded}{%
+  \ifnum\insertsectionheadnumber=\insertsectionnumber\relax\lbd@modatual\else
+    \lbd@dif=\insertsectionheadnumber\relax\advance\lbd@dif by -\insertsectionnumber\relax
+    \ifnum\lbd@dif<0 \lbd@dif=-\lbd@dif\fi
+    \ifnum\lbd@janela=0 \lbd@modoutro\else
+      \ifnum\lbd@dif>\lbd@janela\relax
+        \advance\lbd@dif by -1\relax\ifnum\lbd@dif=\lbd@janela\relax\lbd@reticencias\fi
+      \else\lbd@modoutro\fi
+    \fi
+  \fi}
+\setbeamertemplate{subsection in sidebar}{%
+  \lbd@item{8.2mm}{subsection in sidebar}{\noindent\llap{\makebox[2.6mm][l]{\tikz[baseline=-0.6ex]\fill[labsemCobre](0,0)circle(0.55mm);}}%
+    {\usebeamerfont{subsection in sidebar}\insertsubsectionhead}}}
+\setbeamertemplate{subsection in sidebar shaded}{%
+  \lbd@item{8.2mm}{subsection in sidebar shaded}{\noindent\llap{\makebox[2.6mm][l]{\tikz[baseline=-0.6ex]\fill[lbdSidebarTexto](0,0)circle(0.3mm);}}%
+    {\usebeamerfont{subsection in sidebar}\insertsubsectionhead}}}
+\beamer@nav@subsectionstyle{show/show/hide}
+
+% ------------------------------------------------ título do quadro (com "sobretítulo" do módulo)
+\setbeamertemplate{frametitle}{%
+  \vskip3.2mm
+  \ifx\lbd@modcurto\@empty\else
+    {\ttfamily\tiny\color{labsemCobre}\MakeUppercase{\lbd@modcurto}%
+     \ifx\insertsubsection\@empty\else{\color{labsemPedra}\ \ ·\ \ \MakeUppercase{\insertsubsection}}\fi\par}\vskip0.8mm
+  \fi
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}%
+  \ifx\insertframesubtitle\@empty\else{\small\color{labsemPedra}\insertframesubtitle\par}\fi
+  \vskip0.9mm{\color{labsemCobre}\rule{9mm}{1pt}}\par\vskip0.3mm}
+
+% ------------------------------------------------ rodapé: marca UFMS no canto inferior direito (MIV UFMS)
+\setbeamertemplate{footline}{\hfill\raisebox{2.5mm}{\labsemUFMS{4.2mm}}\hspace*{5mm}}
+
+% ------------------------------------------------ página de título (frame [plain])
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[labsemGrafite](current page.south west)rectangle(current page.north east);
+    \node[anchor=south east,inner sep=0,opacity=0.85] at (current page.south east){\labsemFundo[width=\paperwidth]{grafite}};
+    \node[anchor=north west,inner sep=0] at ([xshift=10mm,yshift=-9mm]current page.north west)
+      {\labsemLogo[height=12mm]{imagotipo}{negativo}};
+    \node[anchor=west,text width=0.66\paperwidth,align=left,inner sep=0] at ([xshift=10mm,yshift=1mm]current page.west)
+      {{\ttfamily\scriptsize\color{labsemCobre}\labsemT{NOTAS DE AULA}{LECTURE NOTES}\par}\vspace{2mm}
+       {\usebeamerfont{title}\color{labsemMarfim}\inserttitle\par}\vspace{2mm}
+       \ifx\insertsubtitle\@empty\else{\large\color{labsemPedra}\insertsubtitle\par}\vspace{4mm}\fi
+       {\small\color{labsemMarfim}\insertauthor\par}\vspace{1mm}
+       {\ttfamily\scriptsize\color{labsemPedra}\insertinstitute\par}\vspace{1mm}
+       {\ttfamily\scriptsize\color{labsemCobre}\insertdate\par}};
+    \node[anchor=south west,inner sep=0] at ([xshift=10mm,yshift=7mm]current page.south west)
+      {\labsemLogo[height=5.5mm]{logotipo}{negativo}\hspace{6mm}\labsemFAENG[negativo]{5.5mm}\hspace{6mm}\labsemUFMS[negativo]{5.5mm}};
+  \end{tikzpicture}}
+
+% ------------------------------------------------ divisória de bloco (\part) e apêndice
+\def\lbd@rotulobloco{\labsemT{BLOCO}{PART}\ \ \ifnum\value{part}<10 0\fi\arabic{part}}
+\AtBeginDocument{\renewcommand\appendixname{\labsemT{Apêndice}{Appendix}}}
+\let\lbd@appendixorig\appendix
+\renewcommand\appendix{\gdef\lbd@rotulobloco{\labsemT{APÊNDICE}{APPENDIX}}\gdef\lbd@modcurto{}\lbd@appendixorig}
+\newcommand\lbd@divisoria{%
+  {\setbeamertemplate{footline}{}
+   \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[labsemGrafite](current page.south west)rectangle(current page.north east);
+      \node[anchor=south east,inner sep=0,opacity=0.55] at (current page.south east){\labsemFundo[width=\paperwidth]{grafite}};
+      \node[anchor=west,align=left] at ([xshift=12mm]current page.west)
+        {{\ttfamily\small\color{labsemCobre}\lbd@rotulobloco}\\[3mm]
+         {\labsemFonteTitulo\Huge\color{labsemMarfim}\insertpart}};
+    \end{tikzpicture}
+   \end{frame}}}
+\ifx\lbd@divisor\lbd@true\AtBeginPart{\lbd@divisoria}\fi
+
+% ------------------------------------------------ sumário (tópicos do módulo)
+\setbeamertemplate{subsection in toc}{\leavevmode\hbox to 7mm{\ttfamily\small\color{labsemCobre}%
+  \ifnum\inserttocsubsectionnumber<10 0\fi\inserttocsubsectionnumber\hss}\inserttocsubsection\par\vskip1.2mm}
+\setbeamertemplate{section in toc}{\leavevmode{\ttfamily\small\color{labsemCobre}\inserttocsectionnumber}\hspace{2mm}\inserttocsection\par}
+
+% ------------------------------------------------ estrutura do deck
+\NewDocumentCommand\bloco{O{#2} m}{\part[#1]{#2}}
+\NewDocumentCommand\modulo{O{#3} m m}{%
+  \gdef\moduloatual{#2}\gdef\lbd@modcurto{#1}%
+  \section[#1]{#3}%
+  \begin{frame}[label=#2]{#3}
+    {\ttfamily\scriptsize\color{labsemPedra}\labsemT{NESTE MÓDULO}{IN THIS MODULE}}\par\vskip2mm
+    \begin{multicols}{2}\small
+      \tableofcontents[currentsection,hideothersubsections,sectionstyle=hide/hide]
+    \end{multicols}
+  \end{frame}}
+\NewDocumentCommand\emconstrucao{O{#3} m m}{%
+  \gdef\moduloatual{#2}\gdef\lbd@modcurto{#1}%
+  \section[#1]{#3}%
+  \begin{frame}[label=#2]{#3}
+    \centering\vfill
+    \tikz\node[draw=labsemPedra,dashed,rounded corners=2mm,inner xsep=10mm,inner ysep=6mm,align=center]
+      {\labsemIcone[height=9mm]{documento}{marfim}\\[2mm]{\large\color{labsemPedra}\labsemT{Em construção}{Under construction}}};
+    \vfill
+    \irpara{menu}{Menu}
+  \end{frame}}
+
+% ------------------------------------------------ botões e navegação
+\newcommand\lbd@botaoconteudo[2]{\tikz[baseline=(b.base)]\node[draw=labsemCobre,rounded corners=1.4mm,
+  inner xsep=2mm,inner ysep=1mm,font=\ttfamily\scriptsize,text=labsemCobre](b){#2};}
+\newcommand\irpara[2]{\hyperlink{#1}{\lbd@botaoconteudo{}{#2 →}}}
+\newcommand\voltar{\Acrobatmenu{GoBack}{\lbd@botaoconteudo{}{↶ \labsemT{Voltar}{Back}}}}
+\newcommand\verrevisao[1]{\hyperlink{#1}{\lbd@botaoconteudo{}{\labsemT{Revisão}{Review} \MakeUppercase{#1} →}}}
+\newcommand\resposta[1]{\irpara{#1}{\labsemT{Resposta}{Answer}}}
+\newcommand\botaomenu[3][]{\hyperlink{#2}{\tikz[baseline=(b.base)]{%
+  \node[fill=lbdCartao,rounded corners=1.6mm,minimum width=0.46\textwidth,minimum height=2.1em,
+        inner xsep=3mm,align=left,text width=0.46\textwidth-6mm,font=\small,text=labsemGrafite](b)
+        {\ifx\relax#1\relax\else{\ttfamily\color{labsemCobre}#1}\quad\fi#3};
+  \fill[labsemCobre]([xshift=0.6mm,yshift=1.6mm]b.south west)rectangle([xshift=1.4mm,yshift=-1.6mm]b.north west);}}}
+
+% ------------------------------------------------ caixas didáticas
+\tcbset{lbdbase/.style={enhanced,boxrule=0pt,arc=1.2mm,left=3mm,right=3mm,top=1.4mm,bottom=1.4mm,
+  fonttitle=\ttfamily\scriptsize,coltitle=labsemCobre,colback=lbdCartao!60!labsemMarfim,
+  borderline west={1.4pt}{0pt}{#1},attach title to upper={\par\vspace{0.5mm}},colupper=labsemGrafite}}
+\newtcolorbox{definicao}[1][]{lbdbase=labsemAzulNoturno,title={\labsemT{DEFINIÇÃO}{DEFINITION}},#1}
+\newtcolorbox{teorema}[1][]{lbdbase=labsemGrafite,title={\labsemT{TEOREMA}{THEOREM}},#1}
+\newtcolorbox{exemplo}[1][]{lbdbase=labsemPedra,title={\labsemT{EXEMPLO}{EXAMPLE}},#1}
+\newtcolorbox{alerta}[1][]{lbdbase=labsemCobre,title={\labsemT{ATENÇÃO}{WARNING}},#1}
+\newtcolorbox{armadilha}[1][]{lbdbase=labsemCobre,title={\labsemT{ARMADILHA}{PITFALL}},#1}
+\newtcolorbox{seisei}[1][]{lbdbase=labsemVerde,title={\labsemT{SEI ISTO SE…}{I KNOW THIS IF…}},#1}
+\newtcolorbox{exercicio}[1][]{lbdbase=labsemAzulNoturno,title={\labsemT{EXERCÍCIO}{EXERCISE}},#1}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamercolor{block title}{fg=labsemCobre,bg=lbdCartao}
+\setbeamercolor{block body}{fg=labsemGrafite,bg=lbdCartao!55!labsemMarfim}
+\setbeamercolor{block title alerted}{fg=labsemMarfim,bg=labsemCobre}
+\setbeamercolor{block body alerted}{fg=labsemGrafite,bg=labsemCobre!10!labsemMarfim}
+\setbeamercolor{block title example}{fg=labsemMarfim,bg=labsemAzulNoturno}
+\setbeamercolor{block body example}{fg=labsemGrafite,bg=labsemAzulNoturno!7!labsemMarfim}
+\setbeamerfont{block title}{family=\ttfamily,size=\scriptsize}
+
+% ------------------------------------------------ código
+\providecommand\cmd[1]{{\ttfamily\color{labsemAzulNoturno}#1}}
+\providecommand\slideorig[1]{}
+\providecommand\codigo[2][]{\lstinputlisting[#1]{#2}}
+\IfFileExists{lstautogobble.sty}{\RequirePackage{lstautogobble}\lstset{autogobble=true}}{}
+\lstset{basicstyle=\ttfamily\scriptsize,frame=l,framerule=1.2pt,rulecolor=\color{labsemCobre},
+  backgroundcolor=\color{lbdCartao!60!labsemMarfim},numbers=none,aboveskip=4pt,belowskip=4pt}
+\lstdefinestyle{bash}{language=bash}
+\lstdefinestyle{ps}{language=bash}
+\lstdefinestyle{vhdl}{language=VHDL-LABSEM}
+\lstdefinestyle{tcl}{language=tcl}
+\lstdefinestyle{matlab}{language=Matlab}
+\lstdefinestyle{python}{language=Python}
+\lstdefinestyle{c}{language=C}
+
+% ------------------------------------------------ encerramento
+\def\lbd@ufms{ufms}
+\newcommand\finalpage[1]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \ifx\lbd@final\lbd@ufms
+      \fill[labsemAzulUFMS](current page.south west)rectangle(current page.north east);
+    \else
+      \fill[labsemGrafite](current page.south west)rectangle(current page.north east);
+      \node[anchor=south east,inner sep=0,opacity=0.85] at (current page.south east){\labsemFundo[width=\paperwidth]{grafite}};
+    \fi
+    \node[anchor=west,align=left] at ([xshift=12mm,yshift=6mm]current page.west)
+      {{\labsemFonteTitulo\Huge\color{labsemMarfim}#1}\\[4mm]
+       {\ttfamily\small\color{labsemMarfim}\insertauthor}\\[1mm]
+       {\ttfamily\scriptsize\color{labsemMarfim}\labsemTagline}};
+    \node[anchor=south west,inner sep=0] at ([xshift=12mm,yshift=9mm]current page.south west){\labsemLogo[height=10mm]{imagotipo}{mono-branco}};
+    \node[anchor=south east,inner sep=0] at ([xshift=-12mm,yshift=9mm]current page.south east){\labsemUFMS[negativo]{10mm}};
+  \end{tikzpicture}}
+\mode<all>

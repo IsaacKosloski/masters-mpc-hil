@@ -1,0 +1,10 @@
+# Configuracao do latexmk para todo o deck (lida automaticamente em slides/)
+$pdf_mode = 5;          # 5 = XeLaTeX (4 = LuaLaTeX tambem funciona)
+$out_dir  = 'build';
+$aux_dir  = 'build';
+# %P = fonte + codigo previo (-usepretex); vale tambem para o deck completo
+set_tex_cmds('-interaction=nonstopmode -halt-on-error -file-line-error %O %P');
+# '.' primeiro: arquivos do deck tem prioridade; depois o tema do labsem-brand
+ensure_path('TEXINPUTS', '.', './labsem-brand/latex/', './labsem-brand/latex/beamer/',
+            './labsem-brand/assets/cores/', './labsem-brand/assets/linguagem/diagramas/');
+$max_repeat = 6;        # remember picture precisa de 2-3 passagens

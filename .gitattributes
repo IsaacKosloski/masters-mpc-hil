@@ -7,6 +7,7 @@
 
 # Binários (nunca converter, nunca fazer diff textual)
 *.pdf  binary
+*.otf  binary
 *.png  binary
 *.jpg  binary
 *.jpeg binary
@@ -26,3 +27,4 @@
 *.sdc  linguist-language=Tcl
 *.qsf  linguist-language=Tcl
 common/hdl/vendor/** linguist-vendored
+slides/labsem-brand/** linguist-vendored
